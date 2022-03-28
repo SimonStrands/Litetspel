@@ -144,7 +144,7 @@ void Game::run()
 
 		//once = false;
 	}
-	printf("quit");
+	printf("quit"); 
 }
 
 void Game::Update()
@@ -192,7 +192,7 @@ void Game::Update()
 	}
 	if (getkey('4')) {
 		lightNr = 3;
-	}
+	} 
 #pragma endregion camera_settings
 }
 

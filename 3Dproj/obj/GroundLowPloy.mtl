@@ -1,0 +1,16 @@
+# Blender MTL File: 'medieval_blocks_05_4kLowPloy.blend'
+# Material Count: 1
+
+newmtl medieval_blocks_05
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 5.800000 -s 2.000000 2.000000 2.000000 C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\medieval_blocks_05_nor_dx_4k.png
+map_Kd C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\medieval_blocks_05_diff_4k.jpg
+map_Ns C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\medieval_blocks_05_rough_4k.jpg
+disp C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\medieval_blocks_05_disp_4k.png

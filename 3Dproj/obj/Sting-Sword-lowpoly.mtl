@@ -1,0 +1,16 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Sting
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 6.500000 C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\Sting_Normal_DirectX.png
+map_Kd C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\Sting_Base_Color.png
+map_Ka C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\Sting_Mixed_AO.png
+map_Ks C:\\Users\\Simon\\source\\repos\\3DprojFQ(addAssimp)\\3Dproj\\textures\\Sting_Metallic.png
