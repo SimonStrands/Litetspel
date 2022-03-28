@@ -1,0 +1,5 @@
+DCube:
+Hur man får en UAV binda till en texture-textureCube.
+
+BillBoard:
+Hur fungerar det när man bindar en UAV till en vertexBuffer?

@@ -1,0 +1,21 @@
+fix so that its the player pos and not camera pos that fixes tesselation//maybe change it so no shadows
+
+ändra så att dispatch inte tar in exakt hur många bill boards
+
+dynamic har lite problem med billboards (fel sida av speglen)
+
+om jag vill ha transparent billboards på DCube setTransparent(true)
+
+quadtree culling
+start node;
+node has 4 nodes;
+
+node should be able to have multiple 
+change the size of first node based on where objects are in scene?
+should I be able to change the size of nodes dynamicly?
+
+
+FRÅGOR:
+med quad tree hur uppdaterar jag om objektet rör på sig (i vilken nod den ska vara i?):
+eller gör jag det bara på statiska objekt?
+should I be able to change the size of nodes dynamicly?

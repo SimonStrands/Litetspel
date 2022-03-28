@@ -1,0 +1,453 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Graphic">
+      <UniqueIdentifier>{6ec0be66-3097-4d37-83c4-2d07da30839d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphic">
+      <UniqueIdentifier>{302ed8ee-96f5-45d1-963f-e22cd44a757b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{e37493cc-6ed8-4f9a-b730-a551869b857d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{eb5370c0-cfd7-4089-8654-ed60679c717f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Other">
+      <UniqueIdentifier>{808e8528-1981-4a8d-84d3-48a0766b8467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{966afda8-0a09-4a05-9374-93abc8343d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{15d9be16-af52-4468-8276-a005070503bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Other">
+      <UniqueIdentifier>{c8ad6d85-9f3c-46a8-999d-ca01b08ecd66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IMGUI">
+      <UniqueIdentifier>{65f2766b-5edb-4629-b4e9-ac211c83f786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphic\Animation">
+      <UniqueIdentifier>{5ca20437-c167-4b8d-9fc1-4590dc42298a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphic\mesh loading">
+      <UniqueIdentifier>{7221fbe7-5b3b-4ff5-a258-45365d4ffd64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphic\Shadow">
+      <UniqueIdentifier>{7a0471e7-5453-409e-874f-041a93f2e038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{883de206-3f9d-4d66-bc94-5b19f044149f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Vertex">
+      <UniqueIdentifier>{b25e0fd3-7d30-416c-aff1-c1833b1e7313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Pixel">
+      <UniqueIdentifier>{145c6bc5-468c-4d72-b0fd-2c04bbea29d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Geometry">
+      <UniqueIdentifier>{a1a8980e-9083-4eac-a9f6-595f0de008d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphic\Animation &amp; other">
+      <UniqueIdentifier>{b8d70232-b13e-4fcb-a2c2-74dbee6f173a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphic\Animation &amp; other\Paricle">
+      <UniqueIdentifier>{76b250a2-9755-4e96-951d-af0fb06089f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Buffers">
+      <UniqueIdentifier>{66e45ce6-50f5-41a1-8417-a61a2b91662f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\DeferedRendering">
+      <UniqueIdentifier>{312e419a-fa88-469d-b44c-dc63cfcca7a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Buffers\Tesselation">
+      <UniqueIdentifier>{c8d9b148-b2e5-4750-8b35-65fc95e58f13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Buffers\Tesselation\Displaysment">
+      <UniqueIdentifier>{41cceb18-099b-4ede-92c7-7be3af7f680c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Buffers\Tesselation\PhongTess">
+      <UniqueIdentifier>{098efd97-25b9-424d-a244-774b56b5ff0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Billboarding">
+      <UniqueIdentifier>{0573c576-229e-4216-905f-892d3790cd15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphic\Particle">
+      <UniqueIdentifier>{eca78a50-2288-49b2-a3c8-216a00da14de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\CubeMap">
+      <UniqueIdentifier>{45a2d36b-60a3-4518-a4aa-eef17a05710c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D311Helper.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowHelper.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="plHelper.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="deltaTime.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="otherHelps.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="rotation.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imguiManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BillBoard.cpp">
+      <Filter>Source Files\Graphic\Animation &amp; other\Paricle</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadObjFile.cpp">
+      <Filter>Source Files\Graphic\mesh loading</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateBuffer.cpp">
+      <Filter>Source Files\Graphic\mesh loading</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Graphic\mesh loading</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationModel.cpp">
+      <Filter>Source Files\Graphic\Animation &amp; other</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicCubeEnviroment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Convertions.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="BillBoardManager.cpp">
+      <Filter>Source Files\Graphic\Animation &amp; other\Paricle</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrashCollector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRendering.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="TileAnimation.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D311Helper.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="plHelper.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowHelper.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="otherHelps.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="deltaTime.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="rotation.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imguiManager.h">
+      <Filter>Header Files\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>Header Files\Graphic\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="BillBoard.h">
+      <Filter>Header Files\Graphic\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadObjFile.h">
+      <Filter>Source Files\Graphic\mesh loading</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateBuffer.h">
+      <Filter>Source Files\Graphic\mesh loading</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="TileAnimation.h">
+      <Filter>Header Files\Graphic\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMap.h">
+      <Filter>Header Files\Graphic\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationModel.h">
+      <Filter>Header Files\Graphic\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Convertions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRendering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicCubeEnviroment.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="BillBoardManager.h">
+      <Filter>Header Files\Graphic\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="TrashCollector.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Transforms.hlsli">
+      <Filter>Resource Files\Shaders\Buffers</Filter>
+    </None>
+    <None Include="MVP.hlsli">
+      <Filter>Resource Files\Shaders\Buffers\Tesselation</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexBillBoard.hlsl">
+      <Filter>Resource Files\Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Resource Files\Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShadow.hlsl">
+      <Filter>Resource Files\Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShadow.hlsl">
+      <Filter>Resource Files\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelBillShader.hlsl">
+      <Filter>Resource Files\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="SkeletonAnimationVS.hlsl">
+      <Filter>Resource Files\Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="Debugging_test.hlsl">
+      <Filter>Resource Files\Shaders\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="PSSH.hlsl">
+      <Filter>Resource Files\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="PSSHNormal.hlsl">
+      <Filter>Resource Files\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredLightningCS.hlsl">
+      <Filter>Resource Files\Shaders\DeferedRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="TestFragmentshader.hlsl">
+      <Filter>Resource Files\Shaders\DeferedRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexDisplaysment.hlsl">
+      <Filter>Resource Files\Shaders\Buffers\Tesselation</Filter>
+    </FxCompile>
+    <FxCompile Include="DynamicCubicPS.hlsl">
+      <Filter>Resource Files\Shaders\CubeMap</Filter>
+    </FxCompile>
+    <FxCompile Include="DomainDisplaysment.hlsl">
+      <Filter>Resource Files\Shaders\Buffers\Tesselation\Displaysment</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongTessDomain.hlsl">
+      <Filter>Resource Files\Shaders\Buffers\Tesselation\PhongTess</Filter>
+    </FxCompile>
+    <FxCompile Include="HullDisplaysment.hlsl">
+      <Filter>Resource Files\Shaders\Buffers\Tesselation\Displaysment</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongTessHull.hlsl">
+      <Filter>Resource Files\Shaders\Buffers\Tesselation\PhongTess</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryShader.hlsl">
+      <Filter>Resource Files\Shaders\Billboarding</Filter>
+    </FxCompile>
+    <FxCompile Include="BillBoardUpdate.hlsl">
+      <Filter>Resource Files\Shaders\Billboarding</Filter>
+    </FxCompile>
+    <FxCompile Include="DeffrendCSwithUAVArray.hlsl">
+      <Filter>Resource Files\Shaders\CubeMap</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Help.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="whatToDO.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
