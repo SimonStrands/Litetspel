@@ -13,7 +13,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 #ifdef _DEBUG
 	RedirectIOToConsole();
 #endif
-	//hej där simon
+	//hej där simon HEJ IGEN
 	Game game(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 	game.run();
 	
