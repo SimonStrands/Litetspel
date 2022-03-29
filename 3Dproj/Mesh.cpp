@@ -2,17 +2,14 @@
 #include <mutex>
 #include <thread>
 
-std::mutex createVertexBufferMutex;
-std::mutex createConstVertexBufferMutex;
-
-MeshObj::MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material *material)
+MeshObj::MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material *material, bool indecies)
 {
 	this->HS = nullptr;
 	this->DS = nullptr;
 	this->nrOfVertexes = (int)vertecies.size();
 	this->matrial = material;
 	//kanske?
-	CreateVertexBuffer(gfx->getDevice(), vertecies, this->vertexBuffer);
+	CreateVertexBuffer(gfx->getDevice(), vertecies, this->vertexBuffer, indecies);
 	CreateVertexConstBuffer(gfx, this->Pg_pConstantBuffer);
 }
 

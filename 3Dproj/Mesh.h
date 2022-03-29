@@ -11,7 +11,7 @@
 //for obj only
 class MeshObj {
 public:
-	MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material *material);
+	MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material* material, bool indecies = false);
 	//another type of delete 
 	void begone();
 	virtual ~MeshObj();
