@@ -210,12 +210,16 @@ void Graphics::Update(float dt, vec3 camPos)
 		LCBG.cameraPos.element[3] = 0;
 	}
 
-	LCBG.projection.element = vcbd.projection.element;
 	for (int i = 0; i < nrOfLights; i++) {
 		LCBG.lightView.element[i] = this->light[i]->getLightViewProj();
 		LCBG.lightPos.element[i][0] = light[i]->getPos().x;
 		LCBG.lightPos.element[i][1] = light[i]->getPos().y;
 		LCBG.lightPos.element[i][2] = light[i]->getPos().z;
+
+		LCBG.lightColor.element[i][0] = light[i]->getColor().x;
+		LCBG.lightColor.element[i][1] = light[i]->getColor().y;
+		LCBG.lightColor.element[i][2] = light[i]->getColor().z;
+
 		LCBG.lightPos.element[i][3] = 0;
 	}
 	D3D11_MAPPED_SUBRESOURCE resource;

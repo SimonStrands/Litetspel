@@ -2,7 +2,7 @@
 #include "rotation.h"
 
 
-ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx)
+ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx, UINT width, UINT height)
 {
 	this->gfx = gfx;
 	this->light = light;
@@ -10,7 +10,11 @@ ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx)
 	std::string a;
 	loadVShader("VertexShadow.cso", gfx->getDevice(), vertexShadow, a);
 	loadPShader("PixelShadow.cso", gfx->getDevice(), pixelShadow);
-	if (!CreateDepthStencil(gfx->getDevice(), (UINT)gfx->getWH().x, (UINT)gfx->getWH().y)) {
+	if (width == 0 && height == 0) {
+		width = (UINT)gfx->getWH().x;
+		height = (UINT)gfx->getWH().y;
+	}
+	if (!CreateDepthStencil(gfx->getDevice(), width, height)) {
 		printf("something didnt go right");
 	}
 }
@@ -49,7 +53,6 @@ ID3D11ShaderResourceView*& ShadowMap::GetshadowResV()
 	return this->shadowResV;
 }
 
-
 ID3D11ShaderResourceView*& ShadowMap::fromDepthToSRV()
 {	
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -72,7 +75,6 @@ ID3D11ShaderResourceView*& ShadowMap::fromDepthToSRV()
 	shadowRes->Release();
 	return shadowResV;
 }
-
 
 void ShadowMap::setUpdateShadow()
 {

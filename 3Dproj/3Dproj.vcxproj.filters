@@ -88,9 +88,6 @@
     <Filter Include="Header Files\Graphic\Particle">
       <UniqueIdentifier>{eca78a50-2288-49b2-a3c8-216a00da14de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Shaders\CubeMap">
-      <UniqueIdentifier>{45a2d36b-60a3-4518-a4aa-eef17a05710c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -417,9 +414,6 @@
     <FxCompile Include="VertexDisplaysment.hlsl">
       <Filter>Resource Files\Shaders\Buffers\Tesselation</Filter>
     </FxCompile>
-    <FxCompile Include="DynamicCubicPS.hlsl">
-      <Filter>Resource Files\Shaders\CubeMap</Filter>
-    </FxCompile>
     <FxCompile Include="DomainDisplaysment.hlsl">
       <Filter>Resource Files\Shaders\Buffers\Tesselation\Displaysment</Filter>
     </FxCompile>
@@ -437,9 +431,6 @@
     </FxCompile>
     <FxCompile Include="BillBoardUpdate.hlsl">
       <Filter>Resource Files\Shaders\Billboarding</Filter>
-    </FxCompile>
-    <FxCompile Include="DeffrendCSwithUAVArray.hlsl">
-      <Filter>Resource Files\Shaders\CubeMap</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

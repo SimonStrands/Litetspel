@@ -12,10 +12,12 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	rm = new ResourceManager(gfx);
 
 	//create lights
-	nrOfLight = 1;
+	nrOfLight = 2;
 	light = new Light * [nrOfLight];
 	light[0] = new DirLight(vec3(0,60,8), vec3(0.1f, -PI/2, 1.f));
-	//light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
+	light[0]->getColor() = vec3(1, 0, 0);
+	light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
+	light[1]->getColor() = vec3(0, 1, 0);
 	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
 	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
 	gfx->getLightconstbufferforCS()->nrOfLights.element = nrOfLight;

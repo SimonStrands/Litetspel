@@ -19,22 +19,19 @@ struct CB {
 struct DeafulatThings {
 
 };
-
+static const int MAXNROFLIGHTS = 6;//if change, change this in Transforms.hlsi
 struct LCBGS : public CB {
 	struct {
 		float element[4];
 	}cameraPos;
 	struct {
-		float element[4];
+		float element[MAXNROFLIGHTS][4];
 	}lightColor;
 	struct {
-		float element[6][4];//6 pc of float4
+		float element[MAXNROFLIGHTS][4];//6 pc of float4
 	}lightPos;
 	struct {
-		DirectX::XMMATRIX element;//max nr of projections is 2
-	}projection;
-	struct {
-		DirectX::XMMATRIX element[6];
+		DirectX::XMMATRIX element[MAXNROFLIGHTS];//projection is in here
 	}lightView;
 	struct {
 		int element;//use this as a flag so nroflights = i - MAXNROFLIGHTS;
