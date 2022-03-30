@@ -2,7 +2,7 @@
 #include "Random.h"
 //set position later
 
-BillBoardManager::BillBoardManager(Graphics*& gfx, ID3D11ShaderResourceView* SRV, int nrOfParticles, vec3 orgin, vec3 sizeofArea, int maxNumberOfParticles):
+BillBoardGroup::BillBoardGroup(Graphics*& gfx, ID3D11ShaderResourceView* SRV, int nrOfParticles, vec3 orgin, vec3 sizeofArea, int maxNumberOfParticles):
 	anim()
 {
 	this->nrOfParticles = nrOfParticles;
@@ -61,12 +61,12 @@ BillBoardManager::BillBoardManager(Graphics*& gfx, ID3D11ShaderResourceView* SRV
 	}
 }
 
-void BillBoardManager::setAnimation(int noaw, int noah, float tb)
+void BillBoardGroup::setAnimation(int noaw, int noah, float tb)
 {
 	this->anim.setAnimation(noaw, noah, tb);
 }
 
-BillBoardManager::~BillBoardManager()
+BillBoardGroup::~BillBoardGroup()
 {
 	if (cUpdate != nullptr) {
 		cUpdate->Release();
@@ -92,7 +92,7 @@ BillBoardManager::~BillBoardManager()
 }
 
 
-void BillBoardManager::update(float dt, Graphics*& gfx)
+void BillBoardGroup::update(float dt, Graphics*& gfx)
 {
 	this->CompConstBuff.time.element = dt;
 	this->CompConstBuff.rand.element = RandomNumber(-1.f, 1.f);
@@ -112,7 +112,7 @@ void BillBoardManager::update(float dt, Graphics*& gfx)
 	gfx->get_IMctx()->CSSetUnorderedAccessViews(0, 1, &nullUAV, nullptr);
 }
 
-void BillBoardManager::updateShader(Graphics*& gfx, vec3 camPos)
+void BillBoardGroup::updateShader(Graphics*& gfx, vec3 camPos)
 {
 	//doesn't make a difference
 	//DirectX::XMMATRIX rot(DirectX::XMMatrixRotationRollPitchYaw(this->getRot().x, this->getRot().y, this->getRot().z));
@@ -167,23 +167,23 @@ void BillBoardManager::updateShader(Graphics*& gfx, vec3 camPos)
 	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 }
 
-void BillBoardManager::changeBehavior(ID3D11ComputeShader* cUpdate)
+void BillBoardGroup::changeBehavior(ID3D11ComputeShader* cUpdate)
 {
 	this->cUpdate->Release();
 	this->cUpdate = cUpdate;
 }
 
-void BillBoardManager::changeNumberOfParticles(int nrOf)
+void BillBoardGroup::changeNumberOfParticles(int nrOf)
 {
 	if (nrOf <= billboards.size()) {
 		this->nrOfParticles = nrOf;
 	}
 	else {
-		std::cout << "Tried to exced the maxnumber of particles set" << std::endl;
+		std::cout << "Tried to exced the maxnumber of particles set in particle group" << std::endl;
 	}
 }
 
-void BillBoardManager::draw(Graphics*& gfx)
+void BillBoardGroup::draw(Graphics*& gfx)
 {
 	UINT offset = 0;
 	static UINT strid = sizeof(point);
@@ -196,7 +196,7 @@ void BillBoardManager::draw(Graphics*& gfx)
 	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
 
-	gfx->get_IMctx()->PSSetShaderResources(0, 1, &SRV);
+	gfx->get_IMctx()->PSSetShaderResources(1, 1, &SRV);
 
 	gfx->get_IMctx()->VSSetConstantBuffers(0, 1, &Vg_pConstantBuffer);
 	gfx->get_IMctx()->GSSetConstantBuffers(0, 1, &Gg_pConstantBuffer);

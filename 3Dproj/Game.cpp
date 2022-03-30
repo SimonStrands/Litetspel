@@ -11,48 +11,32 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	//Resource manager
 	rm = new ResourceManager(gfx);
 
-	//create lights
-	nrOfLight = 2;
-	light = new Light * [nrOfLight];
-	light[0] = new DirLight(vec3(0,60,8), vec3(0.1f, -PI/2, 1.f));
-	light[0]->getColor() = vec3(1, 1, 1);
-	light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
-	light[1]->getColor() = vec3(1, 1, 1);
-	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
-	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
-	gfx->getLightconstbufferforCS()->nrOfLights.element = nrOfLight;
+	setUpLights();
 	
 	//shadow map needs to take more lights
 	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1920U, 1080U);
 	//this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 640u, 360U);
 	
 	gfx->takeIM(&this->UIManager);
-	mus = new Mouse(gfx->getWH());
-	camera = new Camera(gfx, mus, vec3(0,0,0), vec3(1,0,0));
+	mouse = new Mouse();
+	camera = new Camera(gfx, mouse, vec3(0,0,0), vec3(1,0,0));
 	camera->setData();
 	
 	setUpObject();
-	//Qtree = new QuadTree(stataicObj, vec2(0, 0), 4, 200);
+	
 	Qtree = new QuadTree(stataicObj, vec2(0, 0), 4, 100);
 	//(pi,3.14) = 180 degrees
-	Qtree->setUpCamProp(2000);
-	
-	
- 	bill = new BillBoard(gfx, vec3(0.f, 0.f, 9.f), rm->getFire(), rm->getDef()[1], 6);
-	billManager = new BillBoardManager(gfx, rm->getFire(), 10, vec3(0,0,0),vec3(5,5,5));
-	billManager->setAnimation(6, 1, 0.16f);
-	/////LIGHT////////
+	Qtree->setUpCamProp(2000);	
 	for (int i = 0; i < nrOfLight; i++) {
 		LightVisualizers.push_back(new GameObject(rm->get_Models("Camera.obj"), gfx, light[i]->getPos(), light[i]->getRotation(), vec3(1.f, 1.0f, 1.0f)));
 	}
-	//UI
-	//light
+
+	setUpParticles();
+
+	/*IMGUI*/
 	for (int i = 0; i < nrOfLight; i++) {
 		UIManager.takeLight(light[i]);
 	}
-	//camera
-	//UIManager.takeObject(obj[1]);
-	
 	
 	gfx->takeLight((SpotLight**)light, nrOfLight);
 	
@@ -68,7 +52,7 @@ Game::~Game()
 
 	//logic and other
 	delete defRend;
-	delete mus;
+	delete mouse;
 	delete camera;
 	if (shadowMap != nullptr) {
 		delete shadowMap;
@@ -87,8 +71,10 @@ Game::~Game()
 		delete stataicObj[i];
 	}
 	delete Qtree;
-	delete bill; 
-	delete billManager;
+	for (int i = 0; i < billboardGroups.size(); i++) {
+		delete billboardGroups[i];
+	}
+	
 }
 
 
@@ -102,6 +88,17 @@ void Game::run()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		//must look for mouse active
+		if (mouse->getMouseActive()) {
+			mouse->updateMouse(msg);
+		}
+
+		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
+			mouseEvent me = mouse->ReadEvent();
+			std::cout << "x:" << me.getPosX() << "\ny:" << me.getPosY() << std::endl;
+		}
+
+
 		gfx->clearScreen();
 		gfx->setTransparant(false);
 		//for shadow
@@ -115,7 +112,6 @@ void Game::run()
 			camera->setRotation(light[i]->getRotation());
 			shadowMap->inUpdateShadow(i);
 			updateShaders(true, false);
-			
 			DrawAllShadowObject();
 		}
 		//set cam position so its the real cam
@@ -128,7 +124,6 @@ void Game::run()
 		Update();
 		updateShaders();
 
-		bill->UpdateShader(gfx, camera->getPos());
 		defRend->BindFirstPass();
 
 		this->DrawToBuffer();
@@ -165,9 +160,9 @@ void Game::Update()
 	obj[0]->setPos(camera->getPos());
 	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y) + vec3(0, 1.57f, 0));
 
-	bill->update((float)dt.dt());
-	billManager->update(dt.dt(), gfx);
-	mus->UpdateMouse();
+	for (int i = 0; i < billboardGroups.size(); i++) {
+		billboardGroups[i]->update(dt.dt(), gfx);
+	}
 	for (int i = 0; i < LightVisualizers.size(); i++) {
 		LightVisualizers[i]->setPos(light[i]->getPos());
 		LightVisualizers[i]->setRot(vec3(0 , light[i]->getRotation().x, -light[i]->getRotation().y) + vec3(0,1.57f,0));
@@ -229,22 +224,9 @@ void Game::ForwardDraw()
 	gfx->get_IMctx()->PSSetShader(gfx->getPS()[1], nullptr, 0);
 	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
-	bill->draw(gfx);
-	billManager->draw(gfx);
-}
-
-//the Dynamic cube that draw these infront
-void Game::ForwardDrawCube()
-{
-	gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[1]);
-	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-	gfx->get_IMctx()->VSSetShader(gfx->getVS()[1], nullptr, 0);
-	gfx->get_IMctx()->GSSetShader(gfx->getGS()[0], nullptr, 0);
-	gfx->get_IMctx()->PSSetShader(gfx->getPS()[1], nullptr, 0);
-	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
-	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
-	bill->draw(gfx);
-	billManager->draw(gfx);
+	for (int i = 0; i < billboardGroups.size(); i++) {
+		billboardGroups[i]->draw(gfx);
+	}
 }
 
 void Game::DrawAllShadowObject()
@@ -263,8 +245,10 @@ void Game::DrawAllShadowObject()
 
 void Game::updateShaders(bool vs, bool ps)
 {
-
-	billManager->updateShader(gfx, camera->getPos());
+	for (int i = 0; i < billboardGroups.size(); i++) {
+		billboardGroups[0]->updateShader(gfx, camera->getPos());
+	}
+	
 	if (vs)
 	{
 		for (int i = 0; i < obj.size(); i++) {
@@ -345,7 +329,33 @@ void Game::setUpObject()
 			stataicObj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(10, 10, 10)));
 		}
 	}
+}
 
+void Game::setUpLights()
+{
+	//current max number is set in graphics.cpp and transforms.hlsli
+	nrOfLight = 4;
+	light = new Light * [nrOfLight];
 
-	//obj[3]->setTesselation(true, gfx);
+	//create the lights with 
+	light[0] = new DirLight(vec3(0, 60, 8), vec3(0.1f, -PI / 2, 1.f));
+	light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
+	light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
+	light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
+
+	//set color for lights (deafault white)
+	light[0]->getColor() = vec3(1, 1, 0);
+	light[1]->getColor() = vec3(1, 0, 1);
+
+	//say to graphics/shaders how many lights we have
+	gfx->getLightconstbufferforCS()->nrOfLights.element = nrOfLight;
+}
+
+void Game::setUpParticles()
+{
+	//add the billboards here
+	billboardGroups.push_back(new BillBoardGroup(gfx, rm->getFire(), 10, vec3(0, 0, 0), vec3(5, 5, 5)));
+
+	//if billboard have animation add it here
+	billboardGroups[0]->setAnimation(6, 1, 0.16f);
 }

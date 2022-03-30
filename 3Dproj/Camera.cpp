@@ -2,11 +2,11 @@
 #include <iostream>
 //git
 
-Camera::Camera(Graphics *&gfx, Mouse* mus, vec3 pos, vec3 rot)
+Camera::Camera(Graphics *&gfx, Mouse* mouse, vec3 pos, vec3 rot)
 {
 	this->Lcbd = gfx->getLightconstbufferforCS();
 	this->Vcbd = gfx->getVertexconstbuffer();
-	this->mus = mus;
+	this->mouse = mouse;
 	this->mouseSensitivity = 5.0f;
 	this->xCamPos = pos.x;
 	this->yCamPos = pos.y;
@@ -181,7 +181,7 @@ void Camera::handleEvent(float dt)
 	}
 	
 	//rot
-	if (!mus->getMouseActive()) {
+	if (!mouse->getMouseActive()) {
 		if (GetKeyState(VK_RIGHT) & 0x8000) {
 			xCamRot += mouseSensitivity * (float)dt;
 		}
@@ -196,8 +196,9 @@ void Camera::handleEvent(float dt)
 		}
 	}
 	else {
-		xCamRot += mus->getDeltaPos().x * mus->getSense() * (float)dt;
-		yCamRot -= mus->getDeltaPos().y * mus->getSense() * (float)dt;
+		//MousePoint d = mouse->ReadRawDelta();
+		//xCamRot += d.x * mouse->getSense() * (float)dt;
+		//yCamRot -= d.y * mouse->getSense() * (float)dt;
 	}
 }
 

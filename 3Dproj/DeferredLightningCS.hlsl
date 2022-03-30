@@ -12,11 +12,11 @@ SamplerState testSampler;
 [numthreads(32, 8, 1)]//32 16
 void main( uint3 DTid : SV_DispatchThreadID )
 {
-    float4 color = gTexDiffuse.Load(int3(DTid.xy, 0));    
-    float4 fragPos  = gTexPosition.Load( int3(DTid.xy, 0));
-    float4 normal   = gTexNormal.Load(   int3(DTid.xy, 0));
-    float4 gAmbient  = gTexAmbient.Load(  int3(DTid.xy, 0));
-    float4 gSpecular = gTexSpecular.Load( int3(DTid.xy, 0));
+    const float4 color = gTexDiffuse.Load(int3(DTid.xy, 0));    
+    const float4 fragPos  = gTexPosition.Load( int3(DTid.xy, 0));
+    const float4 normal   = gTexNormal.Load(   int3(DTid.xy, 0));
+    const float4 gAmbient  = gTexAmbient.Load(  int3(DTid.xy, 0));
+    const float4 gSpecular = gTexSpecular.Load( int3(DTid.xy, 0));
     
     const int nrOfTempLight = 1;
     if (length(normal.xyz) > 0.2f)//check if there is any object at all
@@ -24,11 +24,9 @@ void main( uint3 DTid : SV_DispatchThreadID )
         float4 lightning = float4(0, 0, 0, 0);
         for (int i = 0; i < nrOfLight; i++)
         {
-
             float3 lightDir = normalize(lightPos[i].xyz - fragPos.xyz);
 			//calculate if we are in shadow
-            const float4 shadowCamera = fragPos;
-            const float4 shadowHomo = mul(shadowCamera, lightViewProj[i]);
+            const float4 shadowHomo = mul(fragPos, lightViewProj[i]);
             float4 shadowMapCoords = shadowHomo * float4(0.5, -0.5, 1.0f, 1.0f) + (float4(0.5f, 0.5f, 0.0f, 0.0f) * shadowHomo.w);
             shadowMapCoords.xyz = shadowMapCoords.xyz / shadowMapCoords.w;
             
@@ -36,8 +34,7 @@ void main( uint3 DTid : SV_DispatchThreadID )
             
             //ambient
             float3 ambient_light = gAmbient.xyz * lightColor[i].xyz;
-            float bias = 0.00001f;
-            //float bias = 0.1f;
+            const float bias = 0.00001f;
             if (SM.r > shadowMapCoords.z - bias &&
                 shadowMapCoords.z <= 1.0f &&//E
 				shadowMapCoords.x < 1 && shadowMapCoords.x > 0 &&
@@ -46,9 +43,6 @@ void main( uint3 DTid : SV_DispatchThreadID )
                )
             {
                 float3 viewDir = normalize(cameraPos.xyz - fragPos.xyz);
-                float3 halfWayDir = normalize(lightDir - viewDir);
-                
-				//////calc lightning//////
 				//defuse
                 float3 defuse_light;
                 float ammount_diffuse = max(dot(normal.xyz, lightDir), 0.0f);

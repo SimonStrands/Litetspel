@@ -16,10 +16,10 @@ struct CTCB : public CB {
 	}padding;
 };
 
-class BillBoardManager {
+class BillBoardGroup {
 public:
 	/*max number of particles must be a multiple of 8 else the code is going to to it for you*/
-	BillBoardManager(Graphics*& gfx, ID3D11ShaderResourceView* SRV, int nrOfParticles = 10, vec3 orgin = vec3(0,0,0), vec3 sizeofArea = vec3(0, 0, 0), int maxNumberOfParticles = 0);
+	BillBoardGroup(Graphics*& gfx, ID3D11ShaderResourceView* SRV, int nrOfParticles = 10, vec3 orgin = vec3(0,0,0), vec3 sizeofArea = vec3(0, 0, 0), int maxNumberOfParticles = 0);
 	/*
 	noaw = nr of Width, 
 	noah = nr of height, 
@@ -27,7 +27,7 @@ public:
 	currently only supports x*1 sheets;
 	*/
 	void setAnimation(int noaw, int noah, float tb);
-	virtual ~BillBoardManager();
+	virtual ~BillBoardGroup();
 
 	void update(float dt, Graphics*& gfx);
 	void updateShader(Graphics*& gfx, vec3 camPos);

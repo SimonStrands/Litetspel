@@ -27,9 +27,7 @@ public:
 	virtual ~Game();
 	void run();
 	void DrawToBuffer();
-	void DrawDynamicCube();
 	void ForwardDraw();
-	void ForwardDrawCube();
 	void DrawAllShadowObject();//without any otherShaders
 	void updateShaders(bool vs = true, bool ps = true);
 private:
@@ -44,20 +42,20 @@ private:
 	DeferredRendering *defRend;
 	DeltaTime dt;
 	ImguiManager UIManager;
-	Mouse* mus;
+	Mouse* mouse;
 	Camera* camera;
 	ShadowMap* shadowMap;
 	QuadTree* Qtree;
 	void setUpObject();
+	void setUpLights();
+	void setUpParticles();
 
 	//game objects
 	Light **light;
 	std::vector<GameObject*> LightVisualizers;
 	std::vector<GameObject*> obj;
 	std::vector<GameObject*> stataicObj;
-	BillBoardManager* billManager;
-	DynamicCube* DCube;
-	BillBoard *bill;
+	std::vector<BillBoardGroup*> billboardGroups;
 
 	//var
 	int nrOfLight;//must still exist
