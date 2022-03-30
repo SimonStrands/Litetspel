@@ -18,8 +18,6 @@ void main( uint3 DTid : SV_DispatchThreadID )
     float4 gAmbient  = gTexAmbient.Load(  int3(DTid.xy, 0));
     float4 gSpecular = gTexSpecular.Load( int3(DTid.xy, 0));
     
-    const float SMWIDTH = 1920;
-    const float SMHEIGHT = 1080;
     const int nrOfTempLight = 1;
     if (length(normal.xyz) > 0.2f)//check if there is any object at all
     {
@@ -34,8 +32,7 @@ void main( uint3 DTid : SV_DispatchThreadID )
             float4 shadowMapCoords = shadowHomo * float4(0.5, -0.5, 1.0f, 1.0f) + (float4(0.5f, 0.5f, 0.0f, 0.0f) * shadowHomo.w);
             shadowMapCoords.xyz = shadowMapCoords.xyz / shadowMapCoords.w;
             
-            //float4 SM = ShadowMapping.Sample()
-            float4 SM = shadowMapping.Load(int4(shadowMapCoords.x * SMWIDTH, shadowMapCoords.y * SMHEIGHT, i, 0));
+            float4 SM = shadowMapping.SampleLevel(testSampler, float3(shadowMapCoords.x, shadowMapCoords.y, i), 0);
             
             //ambient
             float3 ambient_light = gAmbient.xyz * lightColor[i].xyz;

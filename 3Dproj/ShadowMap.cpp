@@ -1,5 +1,6 @@
 #include "ShadowMap.h"
 #include "rotation.h"
+#include "D311Helper.h"
 
 
 ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx, UINT width, UINT height)
@@ -17,6 +18,7 @@ ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx, UINT widt
 	if (!CreateDepthStencil(gfx->getDevice(), width, height)) {
 		printf("something didnt go right");
 	}
+	SetViewport(ShadowViewPort, width, height);
 }
 
 ShadowMap::~ShadowMap()
@@ -78,6 +80,9 @@ ID3D11ShaderResourceView*& ShadowMap::fromDepthToSRV()
 
 void ShadowMap::setUpdateShadow()
 {
+
+	//set view port here
+	gfx->get_IMctx()->RSSetViewports(1, &this->ShadowViewPort);
 	for (int i = 0; i < nrOfLights; i++) {
 		gfx->get_IMctx()->ClearDepthStencilView(dsViews[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	}

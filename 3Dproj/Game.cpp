@@ -15,15 +15,16 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	nrOfLight = 2;
 	light = new Light * [nrOfLight];
 	light[0] = new DirLight(vec3(0,60,8), vec3(0.1f, -PI/2, 1.f));
-	light[0]->getColor() = vec3(1, 0, 0);
+	light[0]->getColor() = vec3(1, 1, 1);
 	light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
-	light[1]->getColor() = vec3(0, 1, 0);
+	light[1]->getColor() = vec3(1, 1, 1);
 	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
 	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
 	gfx->getLightconstbufferforCS()->nrOfLights.element = nrOfLight;
 	
 	//shadow map needs to take more lights
-	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx);
+	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1920U, 1080U);
+	//this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 640u, 360U);
 	
 	gfx->takeIM(&this->UIManager);
 	mus = new Mouse(gfx->getWH());
@@ -121,6 +122,7 @@ void Game::run()
 		camera->setPosition(camLP);
 		camera->setRotation(camLR);
 		gfx->setProjection(0);//last can be dir light
+		gfx->RsetViewPort();
 
 
 		Update();
@@ -336,13 +338,13 @@ void Game::setUpObject()
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(100,0,100), vec3(0, 0, 0), vec3(1, 1, 1)));
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-112,0,-100), vec3(0, 0, 0), vec3(1, 1, 1)));
-	//float gw = 30;
-	//float gn = 8;
-	//for (int x = 0; x < gn; x++) {
-	//	for (int y = 0; y < gn; y++) {
-	//		stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 0), vec3(1, 1, 1)));
-	//	}
-	//}
+	float gw = 10;
+	float gn = 8;
+	for (int x = 0; x < gn; x++) {
+		for (int y = 0; y < gn; y++) {
+			stataicObj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(10, 10, 10)));
+		}
+	}
 
 
 	//obj[3]->setTesselation(true, gfx);

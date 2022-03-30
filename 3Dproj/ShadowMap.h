@@ -30,5 +30,6 @@ private:
 	ID3D11PixelShader* pixelShadow;
 	ID3D11Resource* shadowRes;
 	ID3D11ShaderResourceView* shadowResV;
+	D3D11_VIEWPORT ShadowViewPort;
 
 };

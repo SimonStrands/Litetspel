@@ -116,6 +116,7 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//set settings up
 	immediateContext->PSSetSamplers(0, 1, &sampler);
 	immediateContext->DSSetSamplers(0, 1, &sampler);
+	immediateContext->CSSetSamplers(0, 1, &sampler);
 
 	immediateContext->PSSetShader(getPS()[0], nullptr, 0);
 	immediateContext->RSSetViewports(1, &viewPort);
