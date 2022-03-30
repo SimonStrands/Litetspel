@@ -2,14 +2,27 @@
 #include <mutex>
 #include <thread>
 
-MeshObj::MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material *material, bool indecies)
+MeshObj::MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material *material)
 {
 	this->HS = nullptr;
 	this->DS = nullptr;
 	this->nrOfVertexes = (int)vertecies.size();
 	this->matrial = material;
 	//kanske?
-	CreateVertexBuffer(gfx->getDevice(), vertecies, this->vertexBuffer, indecies);
+	CreateVertexBuffer(gfx->getDevice(), vertecies, this->vertexBuffer);
+	CreateVertexConstBuffer(gfx, this->Pg_pConstantBuffer);
+}
+
+MeshObj::MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, std::vector<DWORD> indecies, Material* material)
+{
+	this->HS = nullptr;
+	this->DS = nullptr;
+	this->nrOfVertexes = (int)vertecies.size();
+	this->nrOfIndecies = (int)indecies.size();
+	this->matrial = material;
+	//kanske?
+	CreateVertexBuffer(gfx->getDevice(), vertecies, this->vertexBuffer);
+	CreateVertexBuffer(gfx->getDevice(), indecies, this->indexBuffer, true);
 	CreateVertexConstBuffer(gfx, this->Pg_pConstantBuffer);
 }
 
@@ -17,6 +30,9 @@ void MeshObj::begone()
 {
 	if (this->vertexBuffer != nullptr) {
 		this->vertexBuffer->Release();
+	}
+	if (this->indexBuffer != nullptr) {
+		this->indexBuffer->Release();
 	}
 	if (this->Pg_pConstantBuffer != nullptr) {
 		this->Pg_pConstantBuffer->Release();
@@ -68,7 +84,9 @@ void MeshObj::draw(ID3D11DeviceContext*& immediateContext)
 	immediateContext->PSSetShaderResources(0, 4, this->matrial->texSRVPS);
 	immediateContext->PSSetConstantBuffers(0, 1, &this->Pg_pConstantBuffer);
 	immediateContext->IASetVertexBuffers(0, 1, &this->vertexBuffer, &strid, &offset);
-	immediateContext->Draw(this->nrOfVertexes, 0);
+	immediateContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	immediateContext->DrawIndexed(nrOfIndecies, 0, 0);
+
 }
 
 void MeshObj::draw2(ID3D11DeviceContext*& immediateContext)

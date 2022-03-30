@@ -178,9 +178,9 @@ bool getMatrialFromFile(std::string fileName, std::vector<Material*> &matrial, G
 	return true;
 }
 
-void createMesh(Graphics*& gfx, std::vector<MeshObj> &Meshes, std::vector<vertex> &vertecies, Material* matrial) {
-	fixtangent(vertecies);
-	MeshObj a(gfx, vertecies, matrial);
+void createMesh(Graphics*& gfx, std::vector<MeshObj> &Meshes, std::vector<vertex> &vertecies, std::vector<DWORD> indecies, Material* matrial) {
+	//fixtangent(vertecies);// if use assimp don't have this else have this!
+	MeshObj a(gfx, vertecies, indecies, matrial);
 	Meshes.push_back(a);
 	//Meshes.push_back(MeshObj(gfx, vertecies, matrial));
 	if (matrial->flags.Maps[3]) {
@@ -230,7 +230,7 @@ void readFace(std::string readWord, std::vector<vertex> &vertecies, std::vector<
 		}
 }
 
-void getLowest(vec3 box[2], std::array<float, 3> vPos)
+void getLowest(vec3 box[2], float vPos[3])
 {
 	//get the lowest
 	if (box[0].x < vPos[0]) {
@@ -254,86 +254,67 @@ void getLowest(vec3 box[2], std::array<float, 3> vPos)
 	}
 }
 
-bool readObjFile(std::vector<MeshObj>& Meshes, std::string fileName, std::vector<Material*> &matrial, Graphics*& gfx, vec3 box[2])
-{
-
-	std::vector<vertex> vertecies;
-	std::vector<std::array<float, 3>>vPos;
-	std::vector<std::array<float, 2>>vUv;
-	std::vector<std::array<float, 4>>vNorm;
-	bool ff = false;
-	int nrOfMeshesOffset = 0;
-	int currentMatrial = 0;
-
-	std::ifstream infile(fileName);
-	std::string readWord;
-	std::string trash;
-	bool useOfG = false;
-	bool first = true;
-	if (!infile.is_open()) {
-		return false;
-	}
-
-	while (std::getline(infile, readWord)) {
-		if (ff && readWord.substr(0, 1) != "f") {
-			ff = false;//we have read all the faces and now create a mesh
-			createMesh(gfx, Meshes, vertecies, matrial[currentMatrial]);
-			nrOfMeshesOffset--;
-		}//read vertexes
-		if (readWord.substr(0, 2) == "v ") {
-			std::istringstream a;
-			vPos.resize(vPos.size() + 1);
-			a.str(readWord);
-			a >> trash >> vPos[vPos.size() - 1][0] >> vPos[vPos.size() - 1][1] >> vPos[vPos.size() - 1][2];
-			getLowest(box, vPos[vPos.size() - 1]);
-		}
-		else if (readWord.substr(0, 3) == "vt ") {
-			std::istringstream a;
-			a.str(readWord);
-			vUv.resize(vUv.size() + 1);
-			a >> trash >> vUv[vUv.size() - 1][0] >> vUv[vUv.size() - 1][1];
-		}
-		else if (readWord.substr(0, 3) == "vn ") {
-			std::istringstream a;
-			a.str(readWord);
-			vNorm.resize(vNorm.size() + 1);
-			a >> trash >> vNorm[vNorm.size() - 1][0] >> vNorm[vNorm.size() - 1][1] >> vNorm[vNorm.size() - 1][2];
-			vNorm[vNorm.size() - 1][3] = 0;
-		}//read face
-		else if (readWord.substr(0, 1) == "f") {
-			readFace(readWord, vertecies, vPos, vUv, vNorm);
-			if (!ff) { nrOfMeshesOffset++; };
-			ff = true;
-		}
-		else if (readWord.substr(0, 6) == "usemtl") {
-			std::istringstream a;
-			a.str(readWord);
-			std::string mName;
-			a >> trash >> mName;
-			for (int i = 0; i < matrial.size(); i++) {
-				if (matrial[i]->name == mName) {
-					currentMatrial = i;
-				}
-			}
-		}
-	}
-	if (nrOfMeshesOffset > 0) {
-		createMesh(gfx, Meshes, vertecies, matrial[currentMatrial]);
-	}
-	else if (nrOfMeshesOffset < 0) {
-		std::cout << "error" << std::endl;
-		return false;
-	}
-	return true;
-}
-
-bool readObjFile2(std::vector<MeshObj>& Meshes, std::string fileName, std::vector<Material*>& matrial, Graphics*& gfx, vec3 box[2])
+bool readObjFile(std::vector<MeshObj>& Meshes, std::string fileName, std::vector<Material*>& matrial, Graphics*& gfx, vec3 box[2])
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals);
+	const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate
+		| aiProcess_ConvertToLeftHanded
+		| aiProcess_GenNormals
+		| aiProcess_CalcTangentSpace
+		| aiProcess_JoinIdenticalVertices
+	);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		return false;
+	}
+	/*This is for boneanimaiton (not added yet)
+	uint boneCount = 0;
+	Animation animation;
+	uint vao = 0;
+	Bone skeleton;
+	uint diffuseTexture;
+	*/
+
+	//make a for loop here
+	for (UINT i = 0; i < scene->mNumMeshes; i++) {
+		std::vector<DWORD> indecies;
+		std::vector<vertex> vertecies;
+		aiMesh* mesh = scene->mMeshes[i];
+
+		for (int i = 0; i < mesh->mNumVertices; i++) {
+			vertex v;
+			v.pos[0] = mesh->mVertices[i].x;
+			v.pos[1] = mesh->mVertices[i].y;
+			v.pos[2] = mesh->mVertices[i].z;
+			getLowest(box, v.pos);
+
+			v.norm[0] = mesh->mNormals[i].x;
+			v.norm[1] = mesh->mNormals[i].y;
+			v.norm[2] = mesh->mNormals[i].z;
+
+			v.uv[0] = mesh->mTextureCoords[0][i].x;
+			v.uv[1] = mesh->mTextureCoords[0][i].y;
+
+			v.bitang[0] = mesh->mBitangents[i].x;
+			v.bitang[1] = mesh->mBitangents[i].y;
+			v.bitang[2] = mesh->mBitangents[i].z;
+
+			v.tang[0] = mesh->mTangents[i].x;
+			v.tang[1] = mesh->mTangents[i].y;
+			v.tang[2] = mesh->mTangents[i].z;
+
+			vertecies.push_back(v);
+		}
+
+		for (int i = 0; i < mesh->mNumFaces; i++) {
+			aiFace& face = mesh->mFaces[i];
+			for (unsigned int j = 0; j < face.mNumIndices; j++)
+				indecies.push_back(face.mIndices[j]);
+		}
+		if (mesh->mMaterialIndex == 0) {
+			mesh->mMaterialIndex = 1;
+		}
+		createMesh(gfx, Meshes, vertecies, indecies, matrial[mesh->mMaterialIndex - 1]);
 	}
 
 	return true;

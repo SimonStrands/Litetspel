@@ -38,9 +38,6 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
  	bill = new BillBoard(gfx, vec3(0.f, 0.f, 9.f), rm->getFire(), rm->getDef()[1], 6);
 	billManager = new BillBoardManager(gfx, rm->getFire(), 10, vec3(0,0,0),vec3(5,5,5));
 	billManager->setAnimation(6, 1, 0.16f);
-	////DCube cannot use standard obj:s without fucking others shaders
-	DCube = new DynamicCube(rm->get_Models("roundsol.obj", gfx), gfx, vec3(5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(2.f, 2.0f, 2.0f));
-	//DCube = new DynamicCube(rm->get_Models("DCube.obj"), gfx, vec3(5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(2.f, 2.0f, 2.0f));
 	/////LIGHT////////
 	for (int i = 0; i < nrOfLight; i++) {
 		LightVisualizers.push_back(new GameObject(rm->get_Models("Camera.obj"), gfx, light[i]->getPos(), light[i]->getRotation(), vec3(1.f, 1.0f, 1.0f)));
@@ -87,7 +84,6 @@ Game::~Game()
 		delete stataicObj[i];
 	}
 	delete Qtree;
-	delete DCube;
 	delete bill; 
 	delete billManager;
 }
@@ -129,8 +125,6 @@ void Game::run()
 		updateShaders();
 
 		bill->UpdateShader(gfx, camera->getPos());
-		//DrawDynamicCube();
-		//
 		defRend->BindFirstPass();
 
 		this->DrawToBuffer();
@@ -152,7 +146,6 @@ void Game::Update()
 	dt.restartClock();
 	//keyboard
 	
-	//obj[3]->addRot(vec3(0, 1.f * dt.dt(), 0));
 	camera->updateCamera((float)dt.dt());
 	if (getkey('N')) {
 		DirectX::XMMATRIX viewMatrix = DirectX::XMMATRIX(
@@ -165,6 +158,8 @@ void Game::Update()
 		YRotation(viewMatrix, obj[1]->getRot().y);
 		gfx->getVertexconstbuffer()->view.element = viewMatrix;
 	}
+	obj[0]->setPos(camera->getPos());
+	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y) + vec3(0, 1.57f, 0));
 
 	bill->update((float)dt.dt());
 	billManager->update(dt.dt(), gfx);
@@ -221,87 +216,8 @@ void Game::DrawToBuffer()
 	}
 }
 
-void Game::DrawDynamicCube()
-{
-	gfx->setProjection(2);
-	vec3 camLP = camera->getPos();
-	vec3 camRT = camera->getRot();
-	vec3 DCRot = DCube->getRot();
-	camera->setPosition(vec3(DCube->getPos()));
-	camera->setRotation(vec3(DCube->getRot()));
-	DCube->ClearRenderTarget(gfx);
-
-	//draw all textures
-	for (int i = 0; i < 6; i++) {
-		//change camera angel 2
-		switch (i)
-		{
-		case 0:
-			camera->setRotation(vec3(DCRot.x + (PI/2), DCRot.y, 0));//right
-			break;
-		case 1:
-			camera->setRotation(vec3(DCRot.x - (PI / 2), DCRot.y, 0));//left
-			break;
-		case 2:
-			camera->setRotation(vec3(DCRot.x, DCRot.y+ (PI / 2), 0));//up
-			break;
-		case 3:
-			camera->setRotation(vec3(DCRot.x, DCRot.y - (PI / 2), 0));//bottom
-			break;
-		case 4:
-			camera->setRotation(vec3(DCRot.x, DCRot.y, 0));//forward
-			break;
-		case 5:
-			camera->setRotation(vec3(DCRot.x + PI, DCRot.y, 0));//back
-			break;
-		}
-		camera->updateCamera();
-		updateShaders(true, false);
-		DCube->setViewPort(gfx);
-		
-		//DEFFERED RENDERING
-		DCube->firstPass();//needed
-		this->DrawToBuffer();
-		DCube->secondPass(shadowMap->GetshadowResV(), DCube->getUAVs()[i], 16, 40, DCube->getCSShader());
-		//FORWARD RENDERING
-		DCube->setRenderTarget(gfx, i);
-		this->ForwardDrawCube();
-		
-	
-	}
-
-	//turn things back to how they where
-	gfx->RsetViewPort();
-	gfx->setProjection(0);
-	camera->setPosition(camLP);
-	camera->setRotation(camRT);
-	camera->updateCamera();
-
-	//for DEBUG CAMERA
-	if (getkey('N')) {
-		DirectX::XMMATRIX viewMatrix = DirectX::XMMATRIX(
-			1.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			-obj[1]->getPos().x, -obj[1]->getPos().y, -obj[1]->getPos().z, 1.0f
-		);
-		XRotation(viewMatrix, obj[1]->getRot().x);
-		YRotation(viewMatrix, obj[1]->getRot().y);
-		gfx->getVertexconstbuffer()->view.element = viewMatrix;
-	}
-	updateShaders(true, false);
-}
-
 void Game::ForwardDraw()
 {
-	gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[0]);
-	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	gfx->get_IMctx()->GSSetShader(nullptr, nullptr, 0);
-	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
-	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
-	DCube->update(camera->getPos(), gfx);
-	DCube->draw(gfx->get_IMctx());
-
 	gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[1]);
 	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	gfx->get_IMctx()->VSSetShader(gfx->getVS()[1], nullptr, 0);
@@ -347,7 +263,6 @@ void Game::updateShaders(bool vs, bool ps)
 	billManager->updateShader(gfx, camera->getPos());
 	if (vs)
 	{
-		DCube->updateVertexShader(gfx);
 		for (int i = 0; i < obj.size(); i++) {
 			obj[i]->updateVertexShader(gfx);
 		}
@@ -356,7 +271,6 @@ void Game::updateShaders(bool vs, bool ps)
 		}
 	}
 	if (ps) {
-		DCube->updatePixelShader(gfx);
 		for (int i = 0; i < obj.size(); i++) {
 			obj[i]->updatePixelShader(gfx);
 		}
@@ -373,17 +287,17 @@ void Game::setUpObject()
 {
 	////////OBJECTS///////////
 	//cameras
-	//obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(2.f, 2.0f, 2.0f)));//main
-	//obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
+	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(2.f, 2.0f, 2.0f)));//main
+	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
 	////
 	//////OBJECTS
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(10.f, 5.f, 10.f), vec3(-1.56f, 1.56f, 3.2f), vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, -50.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	////walls
-	////obj.push_back(new GameObject(rm->get_Models("quad2.obj"), gfx, vec3(0.f, 5.f, 20.f),  vec3(-PI/2, -PI/2, PI), vec3(20.f, 20.f, 20.f)));
-	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(20.f, 5.f, 0.f),  vec3(-PI/2, 0.f, PI),   vec3(20.f, 20.f, 20.f)));
-	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 5.f, -20.f), vec3(-PI/2, PI/2, PI),  vec3(20.f, 20.f, 20.f)));
+	obj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(0.f, 5.f, 20.f),  vec3(-PI/2, -PI/2, PI), vec3(20.f, 20.f, 20.f)));
+	obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(100.f, 5.f, 100.f),  vec3(0, 0.f, 0),   vec3(1.f, 1.f, 1.f)));
+	obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(-100.f, 5.f, -100.f), vec3(0, 0, 0),  vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-20.f, 5.f, 0.f), vec3(-PI/2, PI, PI),   vec3(20.f, 20.f, 20.f)));
 	
 	//static
@@ -416,23 +330,17 @@ void Game::setUpObject()
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	*/
-	//int nrOfPlantsXY = 16;
-	//float sizeOfTree = 100 * 2;
-	//for (int x = 0; x < nrOfPlantsXY; x++) {
-	//	for (int y = 0; y < nrOfPlantsXY; y++) {
-	//		stataicObj.push_back(new GameObject(rm->get_IDK(),
-	//			gfx, vec3(((sizeOfTree/ nrOfPlantsXY) * x) - sizeOfTree/2, 0.f, ((sizeOfTree / nrOfPlantsXY) * y) - sizeOfTree / 2),
-	//			vec3(0.f, 0.f, 1.58f), vec3(5.f, 5.f, 5.f)));
+	
+	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
+	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(100,0,100), vec3(0, 0, 0), vec3(1, 1, 1)));
+	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-112,0,-100), vec3(0, 0, 0), vec3(1, 1, 1)));
+	//float gw = 30;
+	//float gn = 8;
+	//for (int x = 0; x < gn; x++) {
+	//	for (int y = 0; y < gn; y++) {
+	//		stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 0), vec3(1, 1, 1)));
 	//	}
 	//}
-	
-	float gw = 8;
-	float gn = 8;
-	for (int x = 0; x < gn; x++) {
-		for (int y = 0; y < gn; y++) {
-			stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(gw, gw, gw)));
-		}
-	}
 
 
 	//obj[3]->setTesselation(true, gfx);
