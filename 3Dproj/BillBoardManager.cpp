@@ -191,10 +191,8 @@ void BillBoardGroup::draw(Graphics*& gfx)
 	gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[1]);
 	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	gfx->get_IMctx()->VSSetShader(gfx->getVS()[1], nullptr, 0);
-	gfx->get_IMctx()->GSSetShader(gfx->getGS()[0], nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(gfx->getPS()[1], nullptr, 0);
-	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
-	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
+	gfx->get_IMctx()->GSSetShader(gfx->getGS()[0], nullptr, 0);
 
 	gfx->get_IMctx()->PSSetShaderResources(1, 1, &SRV);
 

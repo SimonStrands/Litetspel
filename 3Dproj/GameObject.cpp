@@ -20,19 +20,7 @@ void GameObject::draw(Graphics *&gfx, bool sm)
 {
 	drawed = true;
 	gfx->get_IMctx()->VSSetConstantBuffers(0, 1, &this->getVertexConstBuffer());
-	gfx->get_IMctx()->DSSetConstantBuffers(0, 1, &this->getVertexConstBuffer());
-	gfx->get_IMctx()->HSSetConstantBuffers(0, 1, &this->getVertexConstBuffer());
 	model->draw(gfx, sm);
-}
-
-
-void GameObject::setTesselation(bool tess, Graphics*& gfx)
-{
-	for (int i = 0; i < model->getMehses().size(); i++) {
-	
-		model->getMehses()[i].setTesselation(tess, gfx);
-	
-	}
 }
 
 

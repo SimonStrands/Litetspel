@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <dxgidebug.h>
+#include "flags.h"
 //git
 #define STB_IMAGE_IMPLEMENTATION 
 #define STB_IMAGE_IMPLEMENTATION
@@ -287,9 +288,9 @@ bool SetupPipeline(ID3D11Device* device, ID3D11VertexShader**& vShader,
 		loadVShader("VertexShadow.cso",device, vShader[3], vShaderByteCode[2])&&
 		loadGShader("GeometryShader.cso", device, gShader[0]) &&
 		loadGShader("Debugging_test.cso", device, gShader[1]) &&
-		loadPShader("PSSHNormal.cso", device, pShader[0]) && 
 		loadPShader("PixelBillShader.cso", device, pShader[1])&&
-		loadPShader("PSSH.cso", device, pShader[2])&&
+		//
+		loadPShader("NormalForwardPS.cso", device, pShader[2])&&
 		loadPShader("DynamicCubicPS.cso", device, pShader[3])&&
 		loadHShader("HullDisplaysment.cso", device, hShader[0])&&
 		loadHShader("PhongTessHull.cso", device, hShader[1])&&
@@ -297,7 +298,14 @@ bool SetupPipeline(ID3D11Device* device, ID3D11VertexShader**& vShader,
 		loadDShader("PhongTessDomain.cso", device, dShader[1]))
 	{
 		//continoue
-		
+		if (def_rend) {
+			loadPShader("PSSHNormal.cso", device, pShader[0]);
+			loadPShader("PSSH.cso", device, pShader[2]);
+		}
+		else {
+			loadPShader("NormalForwardPS.cso", device, pShader[0]);
+			loadPShader("NormalForwardPS.cso", device, pShader[2]);
+		}
 	}
 	else {
 		std::cerr << "cant load shaders" << std::endl;

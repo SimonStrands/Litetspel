@@ -84,7 +84,7 @@ void ShadowMap::setUpdateShadow()
 	//set view port here
 	gfx->get_IMctx()->RSSetViewports(1, &this->ShadowViewPort);
 	for (int i = 0; i < nrOfLights; i++) {
-		gfx->get_IMctx()->ClearDepthStencilView(dsViews[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+		gfx->get_IMctx()->ClearDepthStencilView(this->dsViews[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	}
 	gfx->get_IMctx()->VSSetShader(vertexShadow, nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(nullptr, nullptr, 0);

@@ -14,7 +14,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	setUpLights();
 	
 	//shadow map needs to take more lights
-	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1920U, 1080U);
+	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1280U, 720U);
 	//this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 640u, 360U);
 	
 	gfx->takeIM(&this->UIManager);
@@ -123,15 +123,22 @@ void Game::run()
 
 		Update();
 		updateShaders();
+		if (def_rend){
+			//deferred rendering
+			defRend->BindFirstPass();
+			this->DrawToBuffer();
+			defRend->BindSecondPass(shadowMap->GetshadowResV());
+		}
+		
 
-		defRend->BindFirstPass();
-
-		this->DrawToBuffer();
-
-		defRend->BindSecondPass(shadowMap->GetshadowResV());
-
-		gfx->setTransparant(true);
+		//gfx->setTransparant(true);
 		gfx->setRenderTarget();
+		gfx->get_IMctx()->ClearDepthStencilView(gfx->getDepthStencil(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		if (!def_rend) {
+			//if deferred rendfering 
+			gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
+			this->DrawToBuffer();
+		}
 		this->ForwardDraw();
 		gfx->present(this->lightNr);
 
@@ -284,8 +291,8 @@ void Game::setUpObject()
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, -50.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	////walls
 	obj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(0.f, 5.f, 20.f),  vec3(-PI/2, -PI/2, PI), vec3(20.f, 20.f, 20.f)));
-	obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(100.f, 5.f, 100.f),  vec3(0, 0.f, 0),   vec3(1.f, 1.f, 1.f)));
-	obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(-100.f, 5.f, -100.f), vec3(0, 0, 0),  vec3(1.f, 1.f, 1.f)));
+	//obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(100.f, 5.f, 100.f),  vec3(0, 0.f, 0),   vec3(1.f, 1.f, 1.f)));
+	//obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(-100.f, 5.f, -100.f), vec3(0, 0, 0),  vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-20.f, 5.f, 0.f), vec3(-PI/2, PI, PI),   vec3(20.f, 20.f, 20.f)));
 	
 	//static
@@ -319,9 +326,9 @@ void Game::setUpObject()
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	*/
 	
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(100,0,100), vec3(0, 0, 0), vec3(1, 1, 1)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-112,0,-100), vec3(0, 0, 0), vec3(1, 1, 1)));
+	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
+	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(100,0,100), vec3(0, 0, 0), vec3(1, 1, 1)));
+	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-112,0,-100), vec3(0, 0, 0), vec3(1, 1, 1)));
 	float gw = 10;
 	float gn = 8;
 	for (int x = 0; x < gn; x++) {
@@ -334,18 +341,18 @@ void Game::setUpObject()
 void Game::setUpLights()
 {
 	//current max number is set in graphics.cpp and transforms.hlsli
-	nrOfLight = 4;
+	nrOfLight = 2;
 	light = new Light * [nrOfLight];
 
 	//create the lights with 
-	light[0] = new DirLight(vec3(0, 60, 8), vec3(0.1f, -PI / 2, 1.f));
+	light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f));
 	light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
-	light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
-	light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
+	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
+	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
 
 	//set color for lights (deafault white)
-	light[0]->getColor() = vec3(1, 1, 0);
-	light[1]->getColor() = vec3(1, 0, 1);
+	light[0]->getColor() = vec3(1, 0, 1);
+	//light[1]->getColor() = vec3(1, 0, 1);
 
 	//say to graphics/shaders how many lights we have
 	gfx->getLightconstbufferforCS()->nrOfLights.element = nrOfLight;

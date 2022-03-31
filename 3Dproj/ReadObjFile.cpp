@@ -146,13 +146,6 @@ bool getMatrialFromFile(std::string fileName, std::vector<Material*> &matrial, G
 				a >> trash >> mapName;
 				matrial[CTR]->loadTexture(mapName, gfx, 2, def);
 			}
-			else if (readWord.substr(0, 4) == "disp") {
-				//map_Specular
-				std::istringstream a;
-				a.str(readWord);
-				a >> trash >> mapName;
-				matrial[CTR]->loadTexture(mapName, gfx, 4, def);
-			}
 			else if (readWord.substr(0, 8) == "map_Bump") {
 				//map_normal
 				std::istringstream a;
@@ -188,10 +181,6 @@ void createMesh(Graphics*& gfx, std::vector<MeshObj> &Meshes, std::vector<vertex
 	}
 	else {
 		Meshes[Meshes.size() - 1].SetShaders(gfx->getVS()[0], gfx->getPS()[2]);
-	}
-	if (matrial->flags.Maps[4]) {
-		Meshes[Meshes.size() - 1].SetShaders(gfx->getVS()[2]);
-		Meshes[Meshes.size() - 1].SetShaders(gfx->getHS()[0], gfx->getDS()[0]);
 	}
 	vertecies.clear();
 }
@@ -281,7 +270,7 @@ bool readObjFile(std::vector<MeshObj>& Meshes, std::string fileName, std::vector
 		std::vector<vertex> vertecies;
 		aiMesh* mesh = scene->mMeshes[i];
 
-		for (int i = 0; i < mesh->mNumVertices; i++) {
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
 			vertex v;
 			v.pos[0] = mesh->mVertices[i].x;
 			v.pos[1] = mesh->mVertices[i].y;
@@ -306,7 +295,7 @@ bool readObjFile(std::vector<MeshObj>& Meshes, std::string fileName, std::vector
 			vertecies.push_back(v);
 		}
 
-		for (int i = 0; i < mesh->mNumFaces; i++) {
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 			aiFace& face = mesh->mFaces[i];
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
 				indecies.push_back(face.mIndices[j]);

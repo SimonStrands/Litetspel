@@ -365,6 +365,9 @@
     <ClInclude Include="Collision.h">
       <Filter>Header Files\Other</Filter>
     </ClInclude>
+    <ClInclude Include="flags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">
@@ -431,6 +434,9 @@
     </FxCompile>
     <FxCompile Include="BillBoardUpdate.hlsl">
       <Filter>Resource Files\Shaders\Billboarding</Filter>
+    </FxCompile>
+    <FxCompile Include="NormalForwardPS.hlsl">
+      <Filter>Resource Files\Shaders\Pixel</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

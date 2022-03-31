@@ -19,6 +19,7 @@
 #include "TrashCollector.h"
 
 #include "DebugCamera.h"
+#include "flags.h"
 
 //git
 class Game {

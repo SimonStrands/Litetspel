@@ -3,8 +3,8 @@
 #include "Graphics.h"
 
 struct textureFlags {
-	bool Maps[5] = { false, false, false, false, false };
-				// map_Kd, map_Ka, map_Ks, map_Bumb, map_Disp
+	bool Maps[5] = { false, false, false, false };
+				// map_Kd, map_Ka, map_Ks, map_Bumb
 };
 
 struct Material {
@@ -22,5 +22,4 @@ struct Material {
 	float Ks[3] = { 0,0,0 };
 	std::string name = "";
 	ID3D11ShaderResourceView** texSRVPS;
-	ID3D11ShaderResourceView** texSRVDS;
 };

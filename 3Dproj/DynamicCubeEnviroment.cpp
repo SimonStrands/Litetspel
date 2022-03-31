@@ -7,7 +7,6 @@ DynamicCube::DynamicCube(ModelObj* model, Graphics*& gfx, vec3 pos, vec3 rot, ve
 	SetViewport(this->DviewPort, whdCube, whdCube);
 	//set PS VS GS DS
 	for (int i = 0; i < this->model->getMehses().size(); i++) {
-		this->model->getMehses()[i].SetShaders((ID3D11HullShader*)nullptr, (ID3D11DomainShader*) nullptr);
 		this->model->getMehses()[i].SetShaders(gfx->getVS()[0], gfx->getPS()[3]);
 	}
 	loadCShader("DeffrendCSwithUAVArray.cso", gfx->getDevice(), CSShader);

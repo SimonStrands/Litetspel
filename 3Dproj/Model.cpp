@@ -35,28 +35,12 @@ void ModelObj::draw(Graphics*& gfx, bool shadowmap)
 	for (int i = 0; i < mMeshes.size(); i++) {
 		if (!shadowmap) {
 			this->mMeshes[i].SetShader(gfx->get_IMctx());
-			if (this->mMeshes[i].getMatrial()->flags.Maps[4]) {
-				gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-			}
-			else {
-				gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			}
+			gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
 		else{
-			if (this->mMeshes[i].getMatrial()->flags.Maps[4]) {
-				gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[0]);
-				gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-				this->mMeshes[i].SetShader(gfx->get_IMctx(), 1);
-				gfx->get_IMctx()->PSSetShader(nullptr, nullptr, 0);
-			}
-			else {
-				gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-				gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[1]);
-				gfx->get_IMctx()->VSSetShader(gfx->getVS()[3], nullptr, 0);
-				gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
-				gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
-			}
-			
+			gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[1]);
+			gfx->get_IMctx()->VSSetShader(gfx->getVS()[3], nullptr, 0);
 		}
 		mMeshes[i].draw(gfx->get_IMctx());
 	}

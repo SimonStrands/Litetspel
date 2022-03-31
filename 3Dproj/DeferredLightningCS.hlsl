@@ -9,7 +9,8 @@ Texture2D<float4> gTexSpecular : register(t4);
 Texture2DArray<float4> shadowMapping : register(t5);
 SamplerState testSampler;
 
-[numthreads(32, 8, 1)]//32 16
+//[numthreads(32, 8, 1)]//32 16
+[numthreads(32, 16, 1)]//32 16
 void main( uint3 DTid : SV_DispatchThreadID )
 {
     const float4 color = gTexDiffuse.Load(int3(DTid.xy, 0));    
@@ -58,7 +59,7 @@ void main( uint3 DTid : SV_DispatchThreadID )
             else
             {
 				//we are in shadow
-                lightning += float4((gAmbient.xyz * color.xyz * lightColor[i].xyz), 0);
+                lightning += float4((gAmbient.xyz * color.xyz), 0);
             }
         }
         backBuffer[DTid.xy] = float4(lightning.xyz, 1);
