@@ -111,7 +111,8 @@ private:
 
 	ID3D11RasterizerState* pRS;
 	ID3D11BlendState** bs;
-
+	///trst
+	//Här står det inte test
 	//// Shaders ////
 	ID3D11VertexShader**	vShader;
 	ID3D11PixelShader**		pShader;
