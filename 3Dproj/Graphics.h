@@ -111,7 +111,7 @@ private:
 
 	ID3D11RasterizerState* pRS;
 	ID3D11BlendState** bs;
-
+	///trst
 	//// Shaders ////
 	ID3D11VertexShader**	vShader;
 	ID3D11PixelShader**		pShader;
