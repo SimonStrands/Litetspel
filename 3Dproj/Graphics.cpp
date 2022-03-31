@@ -38,7 +38,7 @@ void Graphics::setProjection(int flag)
 		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
 		break;
 	}
-}
+} 
 
 void Graphics::CreateBlendState(int wBlend, bool transparance) {
 	D3D11_BLEND_DESC bd = {};
@@ -62,7 +62,7 @@ void Graphics::CreateBlendState(int wBlend, bool transparance) {
 Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) :
 	speed(1.5f)
 {
-	fov = 90.f;
+	fov = 45.f;
 	ratio = 16.f / 9.f;
 	farPlane = 2000.f;
 	nearPlane = 0.1f;
@@ -116,7 +116,8 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//set settings up
 	immediateContext->PSSetSamplers(0, 1, &sampler);
 	immediateContext->DSSetSamplers(0, 1, &sampler);
-
+	immediateContext->CSSetSamplers(0, 1, &sampler);
+	
 	immediateContext->PSSetShader(getPS()[0], nullptr, 0);
 	immediateContext->RSSetViewports(1, &viewPort);
 	immediateContext->OMSetRenderTargets(1, &renderTarget, dsView);
@@ -210,12 +211,16 @@ void Graphics::Update(float dt, vec3 camPos)
 		LCBG.cameraPos.element[3] = 0;
 	}
 
-	LCBG.projection.element = vcbd.projection.element;
 	for (int i = 0; i < nrOfLights; i++) {
 		LCBG.lightView.element[i] = this->light[i]->getLightViewProj();
 		LCBG.lightPos.element[i][0] = light[i]->getPos().x;
 		LCBG.lightPos.element[i][1] = light[i]->getPos().y;
 		LCBG.lightPos.element[i][2] = light[i]->getPos().z;
+
+		LCBG.lightColor.element[i][0] = light[i]->getColor().x;
+		LCBG.lightColor.element[i][1] = light[i]->getColor().y;
+		LCBG.lightColor.element[i][2] = light[i]->getColor().z;
+
 		LCBG.lightPos.element[i][3] = 0;
 	}
 	D3D11_MAPPED_SUBRESOURCE resource;
@@ -223,9 +228,9 @@ void Graphics::Update(float dt, vec3 camPos)
 	memcpy(resource.pData, &LCBG, sizeof(LCBGS));
 	immediateContext->Unmap(this->Pg_pConstantBuffer, 0);
 	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	this->immediateContext->PSSetConstantBuffers(3, 1, &this->Pg_pConstantBuffer);
+	this->immediateContext->PSSetConstantBuffers(6, 1, &this->Pg_pConstantBuffer);
 	this->immediateContext->CSSetConstantBuffers(6, 1, &this->Pg_pConstantBuffer);
-
+	 
 	this->CPCB.cameraPos.element[0] = camPos.x;
 	this->CPCB.cameraPos.element[1] = camPos.y;
 	this->CPCB.cameraPos.element[2] = camPos.z;
@@ -236,8 +241,6 @@ void Graphics::Update(float dt, vec3 camPos)
 	immediateContext->Unmap(camConstBuffer, 0);
 	ZeroMemory(&resource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 	immediateContext->PSSetConstantBuffers(5, 1, &camConstBuffer);
-
-	immediateContext->HSSetConstantBuffers(5, 1, &camConstBuffer);
 
 	//fps
 	nextFpsUpdate += (float)dt;

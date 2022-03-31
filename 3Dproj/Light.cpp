@@ -59,7 +59,8 @@ const wTofL SpotLight::whatOfLight()
 	return this->flag;
 }
 
-Light::Light(vec3 pos)
+Light::Light(vec3 pos):
+	color(1,1,1)
 {
 	this->pos = pos;
 }
@@ -82,6 +83,12 @@ vec3& Light::getPos()
 {
 	return this->pos;
 }
+
+vec3& Light::getColor()
+{
+	return this->color;
+}
+
 
 DirLight::DirLight(vec3 pos, vec3 rot, float W, float H):
 	SpotLight(pos, rot)

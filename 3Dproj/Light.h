@@ -16,7 +16,9 @@ public:
 	virtual ~Light();
 	vec3& getRotation();
 	vec3& getPos();
+	vec3& getColor();
 private:
+	vec3 color;
 	vec3 pos;
 };
 

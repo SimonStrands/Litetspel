@@ -1,8 +1,9 @@
 #include "ShadowMap.h"
 #include "rotation.h"
+#include "D311Helper.h"
 
 
-ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx)
+ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx, UINT width, UINT height)
 {
 	this->gfx = gfx;
 	this->light = light;
@@ -10,9 +11,14 @@ ShadowMap::ShadowMap(SpotLight** light, int nrOfLights, Graphics* gfx)
 	std::string a;
 	loadVShader("VertexShadow.cso", gfx->getDevice(), vertexShadow, a);
 	loadPShader("PixelShadow.cso", gfx->getDevice(), pixelShadow);
-	if (!CreateDepthStencil(gfx->getDevice(), (UINT)gfx->getWH().x, (UINT)gfx->getWH().y)) {
+	if (width == 0 && height == 0) {
+		width = (UINT)gfx->getWH().x;
+		height = (UINT)gfx->getWH().y;
+	}
+	if (!CreateDepthStencil(gfx->getDevice(), width, height)) {
 		printf("something didnt go right");
 	}
+	SetViewport(ShadowViewPort, width, height);
 }
 
 ShadowMap::~ShadowMap()
@@ -49,7 +55,6 @@ ID3D11ShaderResourceView*& ShadowMap::GetshadowResV()
 	return this->shadowResV;
 }
 
-
 ID3D11ShaderResourceView*& ShadowMap::fromDepthToSRV()
 {	
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -73,11 +78,13 @@ ID3D11ShaderResourceView*& ShadowMap::fromDepthToSRV()
 	return shadowResV;
 }
 
-
 void ShadowMap::setUpdateShadow()
 {
+
+	//set view port here
+	gfx->get_IMctx()->RSSetViewports(1, &this->ShadowViewPort);
 	for (int i = 0; i < nrOfLights; i++) {
-		gfx->get_IMctx()->ClearDepthStencilView(dsViews[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+		gfx->get_IMctx()->ClearDepthStencilView(this->dsViews[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	}
 	gfx->get_IMctx()->VSSetShader(vertexShadow, nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(nullptr, nullptr, 0);

@@ -18,11 +18,6 @@ public:
 	//update vertexConstBuffer on object
 	void Updateshaders(Graphics*& gfx, bool vertex = true);
 
-	/*if Disp_map exist and this funciton is not called displaysment tesselation will occur 
-	else if tess == true phong tesselation will occur
-	else if tess == false it will not tesselate*/
-	void setTesselation(bool tess, Graphics*& gfx);
-
 	//gives 2 points 0 = the lowest in x,y and z while 1 is the highest in x,y and zdimensions
 	void getBoundingBox(DirectX::XMVECTOR theReturn[]);
 

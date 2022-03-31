@@ -8,7 +8,7 @@
 
 class Camera {
 public:
-	Camera(Graphics *&gfx, Mouse *mus = nullptr, vec3 pos = vec3(0,0,10), vec3 rot = vec3(0,0,1));
+	Camera(Graphics *&gfx, Mouse *mouse = nullptr, vec3 pos = vec3(0,0,10), vec3 rot = vec3(0,0,1));
 	virtual ~Camera();
 	void updateCamera();
 	void updateCamera(float dt);
@@ -30,7 +30,7 @@ public:
 	//void lookAt(vec3 lookat);	  //don't know how to make these yet
 	void setData(float FOVRadians = 90, float viewRatio = 16/9, float nearDist = 0.001, float farDist = 2000);
 private:
-	Mouse *mus;
+	Mouse *mouse;
 	Vcb *Vcbd;
 	LCBGS* Lcbd;
 	void rotaiton(DirectX::XMMATRIX &matrix);

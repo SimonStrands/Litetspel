@@ -47,6 +47,18 @@ void shutDownWindow()
 	ImGui_ImplWin32_Shutdown();
 }
 
+void setUpMouse()
+{
+	RAWINPUTDEVICE rid;
+	rid.usUsagePage = 0x01;
+	rid.usUsage = 0x02;
+	rid.dwFlags = 0;
+	rid.hwndTarget = nullptr;
+	if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == false) {
+		std::cout << "error" << std::endl;
+	}
+}
+
 
 
 

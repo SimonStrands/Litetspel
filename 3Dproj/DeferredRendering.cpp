@@ -152,7 +152,8 @@ void DeferredRendering::BindSecondPass(ID3D11ShaderResourceView*& ShadowMapping)
 	
 	gfx->get_IMctx()->CSSetUnorderedAccessViews(0, 1, &this->UAV, nullptr);
 	//köra computeShader
-	gfx->get_IMctx()->Dispatch(60, 135, 1);
+	//gfx->get_IMctx()->Dispatch(60, 135, 1);//1080p
+	gfx->get_IMctx()->Dispatch(40, 45, 1);//720p
 	ID3D11ShaderResourceView* nullSRV[6] = { nullptr };
 	gfx->get_IMctx()->CSSetShaderResources(0, _countof(nullSRV), nullSRV);
 	//nulla unorderedaccesview

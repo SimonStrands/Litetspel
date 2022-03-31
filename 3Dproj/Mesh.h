@@ -11,7 +11,8 @@
 //for obj only
 class MeshObj {
 public:
-	MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material *material);
+	MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, Material* material);
+	MeshObj(Graphics*& gfx, std::vector<vertex> vertecies, std::vector<DWORD> indecies, Material* material);
 	//another type of delete 
 	void begone();
 	virtual ~MeshObj();
@@ -26,25 +27,21 @@ public:
 	void SetShaders(ID3D11VertexShader* VS);
 	/*Set Shaders on this object*/
 	void SetShaders(ID3D11VertexShader* VS, ID3D11PixelShader* PS);
-	/*Set Shaders on this object*/
-	void SetShaders(ID3D11HullShader* HS, ID3D11DomainShader* DS);
 	/*Make this objects shaders to the current shaders*/
 	void SetShader(ID3D11DeviceContext*& immediateContext, int flag = 0);
 	//update the pixels shader (only ka,kd,ks from mtl file)
 	void updatePS(Graphics*& gfx);
-	/*sets shaders according to map/ or coding (if displaysment map is in mtl or we call obj->setTesselation(true/false))*/
-	void setTesselation(bool tess, Graphics*& gfx);
 	Material *getMatrial();
 	//DEBUG
 	ID3D11PixelShader* PS;
 	ID3D11VertexShader* VS;
-	ID3D11HullShader* HS;
-	ID3D11DomainShader* DS;
 private:
 	int nrOfVertexes;
+	int nrOfIndecies;
 	bool defTexture[4] = { false, false, false, false };
 	Material* matrial;
 	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;
 	ID3D11Buffer* Pg_pConstantBuffer;
 
 	std::vector<MeshObj> SubMeshes;

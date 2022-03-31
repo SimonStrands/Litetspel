@@ -29,9 +29,9 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	if (dot(posToView, input.normal) > 0) {
 		input.normal = -input.normal;
 	}
-
-	//ambient
-    float3 ambient_light = float3(0.1, 0.1, 0.1) * lightColor.xyz;
+	float3 lightColor = float3(1, 1, 1);
+	//ambient									//light color
+    float3 ambient_light = float3(0.1, 0.1, 0.1) * lightColor;
     ambient_light = float3(0.9, 0.9, 0.9);
 	//return float4(ka.xyz, 1);
 
