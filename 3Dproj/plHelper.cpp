@@ -222,6 +222,7 @@ bool CreateTexture(std::string file, ID3D11Device* device, ID3D11Texture2D*& tex
 	if (!(stat(file.c_str(), &buffer) == 0)) {
 		return false;
 	}
+
 	int textureWidth;
 	int textureHeight;
 	int channels;

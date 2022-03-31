@@ -102,7 +102,7 @@ void Game::run()
 		gfx->clearScreen();
 		gfx->setTransparant(false);
 		//for shadow
-		//måste uppdatera detta så inte hela object uppdateras när bara skugga ska
+		//mÃ¥ste uppdatera detta sÃ¥ inte hela object uppdateras nÃ¤r bara skugga ska
 		shadowMap->setUpdateShadow();
 		vec3 camLP = camera->getPos();
 		vec3 camLR = camera->getRot();

@@ -61,12 +61,6 @@
     <Filter Include="Resource Files\Shaders\Geometry">
       <UniqueIdentifier>{a1a8980e-9083-4eac-a9f6-595f0de008d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphic\Animation &amp; other">
-      <UniqueIdentifier>{b8d70232-b13e-4fcb-a2c2-74dbee6f173a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphic\Animation &amp; other\Paricle">
-      <UniqueIdentifier>{76b250a2-9755-4e96-951d-af0fb06089f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Shaders\Buffers">
       <UniqueIdentifier>{66e45ce6-50f5-41a1-8417-a61a2b91662f}</UniqueIdentifier>
     </Filter>
@@ -88,6 +82,24 @@
     <Filter Include="Header Files\Graphic\Particle">
       <UniqueIdentifier>{eca78a50-2288-49b2-a3c8-216a00da14de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\CubeMap">
+      <UniqueIdentifier>{45a2d36b-60a3-4518-a4aa-eef17a05710c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Objects">
+      <UniqueIdentifier>{529d5916-32fd-4b06-a5d3-86ac2157f2f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Objects\Paricle">
+      <UniqueIdentifier>{76b250a2-9755-4e96-951d-af0fb06089f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ForSimon">
+      <UniqueIdentifier>{c818af06-8369-4a8d-81c5-d254724fdf4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ForSimon\Animation &amp; other">
+      <UniqueIdentifier>{b8d70232-b13e-4fcb-a2c2-74dbee6f173a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Fysik">
+      <UniqueIdentifier>{af046824-402a-45b3-a0ab-4f5be4016f9b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -105,9 +117,6 @@
     <ClCompile Include="plHelper.cpp">
       <Filter>Source Files\Graphic</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Graphic</Filter>
-    </ClCompile>
     <ClCompile Include="debug.cpp">
       <Filter>Source Files\Other</Filter>
     </ClCompile>
@@ -120,9 +129,6 @@
     <ClCompile Include="Keyboard.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="otherHelps.cpp">
       <Filter>Source Files\Other</Filter>
     </ClCompile>
@@ -131,9 +137,6 @@
     </ClCompile>
     <ClCompile Include="rotation.cpp">
       <Filter>Source Files\Other</Filter>
-    </ClCompile>
-    <ClCompile Include="object.cpp">
-      <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files\Events</Filter>
@@ -163,7 +166,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BillBoard.cpp">
-      <Filter>Source Files\Graphic\Animation &amp; other\Paricle</Filter>
+      <Filter>Source Files\Game\Objects\Paricle</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
@@ -173,9 +176,6 @@
     </ClCompile>
     <ClCompile Include="CreateBuffer.cpp">
       <Filter>Source Files\Graphic\mesh loading</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Graphic\mesh loading</Filter>
@@ -187,7 +187,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AnimationModel.cpp">
-      <Filter>Source Files\Graphic\Animation &amp; other</Filter>
+      <Filter>Source Files\ForSimon\Animation &amp; other</Filter>
     </ClCompile>
     <ClCompile Include="DynamicCubeEnviroment.cpp">
       <Filter>Source Files</Filter>
@@ -196,7 +196,7 @@
       <Filter>Source Files\Other</Filter>
     </ClCompile>
     <ClCompile Include="BillBoardManager.cpp">
-      <Filter>Source Files\Graphic\Animation &amp; other\Paricle</Filter>
+      <Filter>Source Files\Game\Objects\Paricle</Filter>
     </ClCompile>
     <ClCompile Include="Random.cpp">
       <Filter>Source Files</Filter>
@@ -207,9 +207,6 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -217,6 +214,21 @@
       <Filter>Source Files\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="TileAnimation.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Game\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
       <Filter>Source Files\Graphic</Filter>
     </ClCompile>
   </ItemGroup>
