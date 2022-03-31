@@ -26,6 +26,8 @@ public:
 	void getViewFrustoms(vec3 frustoms[]);
 	void setRotation(vec3 newRot);
 	void setPosition(vec3 newpos);
+	void addRotation(vec3 addRot);
+	void movePos(vec3 move);
 	//void lookDir(vec3 lookdir); //don't know how to make these yet
 	//void lookAt(vec3 lookat);	  //don't know how to make these yet
 	void setData(float FOVRadians = 90, float viewRatio = 16/9, float nearDist = 0.001, float farDist = 2000);

@@ -127,6 +127,18 @@ void Camera::setPosition(vec3 newpos)
 	this->zCamPos = newpos.z;
 }
 
+void Camera::addRotation(vec3 addRot)
+{
+	xCamRot += addRot.x;
+	yCamRot += addRot.y;
+}
+
+void Camera::movePos(vec3 move)
+{
+	xCamPos += move.x;
+	yCamPos += move.y;
+}
+
 void Camera::setData(float FOVRadians, float viewRatio, float nearDist, float farDist)
 {
 	this->ratio = viewRatio;

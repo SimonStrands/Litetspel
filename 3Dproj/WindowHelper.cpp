@@ -49,13 +49,17 @@ void shutDownWindow()
 
 void setUpMouse()
 {
-	RAWINPUTDEVICE rid;
-	rid.usUsagePage = 0x01;
-	rid.usUsage = 0x02;
-	rid.dwFlags = 0;
-	rid.hwndTarget = nullptr;
-	if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == false) {
-		std::cout << "error" << std::endl;
+	static bool raw_Mouse_init = false;
+	if (!raw_Mouse_init) {
+		raw_Mouse_init = true; 
+		RAWINPUTDEVICE rid;
+		rid.usUsagePage = 0x01;
+		rid.usUsage = 0x02;
+		rid.dwFlags = 0;
+		rid.hwndTarget = nullptr;
+		if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == false) {
+			std::cout << "error" << std::endl;
+		}
 	}
 }
 

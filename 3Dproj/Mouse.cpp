@@ -24,7 +24,25 @@ void Mouse::updateMouse(MSG msg)
 	case WM_MOUSEMOVE:
 		onMouseMove(x, y);
 		break;
-	case WM_CHAR:
+	case WM_INPUT:
+		UINT dataSize = 0;
+
+		GetRawInputData(reinterpret_cast<HRAWINPUT>(msg.lParam), RID_INPUT, NULL, &dataSize, sizeof(RAWINPUTHEADER));
+
+		if (dataSize > 0) 
+		{
+			std::unique_ptr<BYTE[]> rawdata = std::make_unique<BYTE[]>(dataSize);
+			if (GetRawInputData(reinterpret_cast<HRAWINPUT>(msg.lParam), RID_INPUT, rawdata.get(), &dataSize, sizeof(RAWINPUTHEADER)) == dataSize) 
+			{
+				RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(rawdata.get());
+				if (raw->header.dwType == RIM_TYPEMOUSE)
+				{
+					this->onMouseMoveRaw(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
+				}
+			}
+		}
+		 
+		DefWindowProc(msg.hwnd, msg.message, msg.wParam, msg.lParam);
 		break;
 	} 
 }
@@ -71,6 +89,7 @@ mouseEvent Mouse::ReadEvent()
 	}
 	mouseEvent e = mouseBuffer.front();
 	mouseBuffer.pop();
+	std::cout << mouseBuffer.size() << std::endl;
 	return e;
 }
 
@@ -87,6 +106,7 @@ float Mouse::getSense()
 
 bool Mouse::getMouseActive()
 {
+	activateMouse();
 	return mouse_active;
 }
 
@@ -148,6 +168,11 @@ void Mouse::onMouseMove(int x, int y)
 {
 	mouseEvent m(mouseEvent::EventType::Move, x, y);
 	mouseBuffer.push(m);
+}
+
+void Mouse::onMouseMoveRaw(int x, int y)
+{
+	this->mouseBuffer.push(mouseEvent(mouseEvent::EventType::RAW_MOVE, x, y));
 }
 
 void Mouse::activateMouse()
