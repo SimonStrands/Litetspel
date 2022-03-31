@@ -99,52 +99,52 @@ void Game::run()
 				std::cout << "x:" << me.getPosX() << "\ny:" << me.getPosY() << std::endl;
 			}
 		}
-	//
-	//	
-	//
-	//
-	//	gfx->clearScreen();
-	//	gfx->setTransparant(false);
-	//	//for shadow
-	//	//måste uppdatera detta så inte hela object uppdateras när bara skugga ska
-	//	shadowMap->setUpdateShadow();
-	//	vec3 camLP = camera->getPos();
-	//	vec3 camLR = camera->getRot();
-	//	for (int i = 0; i < nrOfLight; i++) {
-	//		//set cam position to lightposition
-	//		camera->setPosition(light[i]->getPos());
-	//		camera->setRotation(light[i]->getRotation());
-	//		shadowMap->inUpdateShadow(i);
-	//		updateShaders(true, false);
-	//		DrawAllShadowObject();
-	//	}
-	//	//set cam position so its the real cam
-	//	camera->setPosition(camLP);
-	//	camera->setRotation(camLR);
-	//	gfx->setProjection(0);//last can be dir light
-	//	gfx->RsetViewPort();
-	//
-	//
-	//	Update();
-	//	updateShaders();
-	//	if (def_rend){
-	//		//deferred rendering
-	//		defRend->BindFirstPass();
-	//		this->DrawToBuffer();
-	//		defRend->BindSecondPass(shadowMap->GetshadowResV());
-	//	}
-	//	
-	//	gfx->setRenderTarget();
-	//	gfx->setTransparant(true);
-	//	if (!def_rend) {
-	//		//if deferred rendfering 
-	//		gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
-	//		this->DrawToBuffer();
-	//	}
-	//	this->ForwardDraw();
-	//	gfx->present(this->lightNr);
-	//
-	//	//once = false;
+	
+		
+	
+	
+		gfx->clearScreen();
+		gfx->setTransparant(false);
+		//for shadow
+		//måste uppdatera detta så inte hela object uppdateras när bara skugga ska
+		shadowMap->setUpdateShadow();
+		vec3 camLP = camera->getPos();
+		vec3 camLR = camera->getRot();
+		for (int i = 0; i < nrOfLight; i++) {
+			//set cam position to lightposition
+			camera->setPosition(light[i]->getPos());
+			camera->setRotation(light[i]->getRotation());
+			shadowMap->inUpdateShadow(i);
+			updateShaders(true, false);
+			DrawAllShadowObject();
+		}
+		//set cam position so its the real cam
+		camera->setPosition(camLP);
+		camera->setRotation(camLR);
+		gfx->setProjection(0);//last can be dir light
+		gfx->RsetViewPort();
+	
+	
+		Update();
+		updateShaders();
+		if (def_rend){
+			//deferred rendering
+			defRend->BindFirstPass();
+			this->DrawToBuffer();
+			defRend->BindSecondPass(shadowMap->GetshadowResV());
+		}
+		
+		gfx->setRenderTarget();
+		gfx->setTransparant(true);
+		if (!def_rend) {
+			//if deferred rendfering 
+			gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
+			this->DrawToBuffer();
+		}
+		this->ForwardDraw();
+		gfx->present(this->lightNr);
+	
+		//once = false;
 	}
 	printf("quit"); 
 }
