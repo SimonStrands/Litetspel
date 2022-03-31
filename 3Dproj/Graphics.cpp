@@ -38,7 +38,7 @@ void Graphics::setProjection(int flag)
 		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
 		break;
 	}
-}
+} 
 
 void Graphics::CreateBlendState(int wBlend, bool transparance) {
 	D3D11_BLEND_DESC bd = {};
@@ -62,7 +62,7 @@ void Graphics::CreateBlendState(int wBlend, bool transparance) {
 Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) :
 	speed(1.5f)
 {
-	fov = 90.f;
+	fov = 45.f;
 	ratio = 16.f / 9.f;
 	farPlane = 2000.f;
 	nearPlane = 0.1f;
@@ -117,7 +117,7 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	immediateContext->PSSetSamplers(0, 1, &sampler);
 	immediateContext->DSSetSamplers(0, 1, &sampler);
 	immediateContext->CSSetSamplers(0, 1, &sampler);
-
+	
 	immediateContext->PSSetShader(getPS()[0], nullptr, 0);
 	immediateContext->RSSetViewports(1, &viewPort);
 	immediateContext->OMSetRenderTargets(1, &renderTarget, dsView);

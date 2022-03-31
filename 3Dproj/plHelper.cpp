@@ -290,7 +290,6 @@ bool SetupPipeline(ID3D11Device* device, ID3D11VertexShader**& vShader,
 		loadGShader("Debugging_test.cso", device, gShader[1]) &&
 		loadPShader("PixelBillShader.cso", device, pShader[1])&&
 		//
-		loadPShader("NormalForwardPS.cso", device, pShader[2])&&
 		loadPShader("DynamicCubicPS.cso", device, pShader[3])&&
 		loadHShader("HullDisplaysment.cso", device, hShader[0])&&
 		loadHShader("PhongTessHull.cso", device, hShader[1])&&
