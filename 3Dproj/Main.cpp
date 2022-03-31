@@ -14,6 +14,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	RedirectIOToConsole();
 #endif
 	//hej där simon HEJ IGEN
+	//Test
 	Game game(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 	game.run();
 	
