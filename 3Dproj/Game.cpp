@@ -130,10 +130,8 @@ void Game::run()
 			defRend->BindSecondPass(shadowMap->GetshadowResV());
 		}
 		
-
-		//gfx->setTransparant(true);
 		gfx->setRenderTarget();
-		gfx->get_IMctx()->ClearDepthStencilView(gfx->getDepthStencil(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		gfx->setTransparant(true);
 		if (!def_rend) {
 			//if deferred rendfering 
 			gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
