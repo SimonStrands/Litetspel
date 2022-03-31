@@ -87,6 +87,7 @@ mouseEvent Mouse::ReadEvent()
 	if (EventBufferEmpty()) {
 		return mouseEvent();
 	}
+	std::cout << mouseBuffer.size() << std::endl;
 	mouseEvent e = mouseBuffer.front();
 	mouseBuffer.pop();
 	std::cout << mouseBuffer.size() << std::endl;

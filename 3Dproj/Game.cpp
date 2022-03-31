@@ -96,7 +96,7 @@ void Game::run()
 				if (me.getType() == mouseEvent::EventType::RAW_MOVE) {
 					camera->addRotation(vec3(me.getPosX() * (float)dt.dt(), -me.getPosY() * dt.dt(), 0));
 				}
-				std::cout << "x:" << me.getPosX() << "\ny:" << me.getPosY() << std::endl;
+				//std::cout << "x:" << me.getPosX() << "\ny:" << me.getPosY() << std::endl;
 			}
 		}
 	
