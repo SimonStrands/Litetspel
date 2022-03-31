@@ -217,9 +217,11 @@ bool CreateInputLayoutBill(ID3D11Device* device, ID3D11InputLayout*& inputLayout
 
 bool CreateTexture(std::string file, ID3D11Device* device, ID3D11Texture2D*& tex, ID3D11ShaderResourceView*& texSRV) 
 {
-	if (file == "") {
+	struct stat buffer;
+	if (!(stat(file.c_str(), &buffer) == 0)) {
 		return false;
 	}
+
 	int textureWidth;
 	int textureHeight;
 	int channels;

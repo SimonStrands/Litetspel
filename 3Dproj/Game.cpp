@@ -299,8 +299,8 @@ void Game::ForwardDraw()
 	gfx->get_IMctx()->GSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
-	DCube->update(camera->getPos(), gfx);
-	DCube->draw(gfx->get_IMctx());
+	//DCube->update(camera->getPos(), gfx);
+	//DCube->draw(gfx->get_IMctx());
 
 	gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[1]);
 	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
@@ -431,6 +431,7 @@ void Game::setUpObject()
 	for (int x = 0; x < gn; x++) {
 		for (int y = 0; y < gn; y++) {
 			stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(gw, gw, gw)));
+			//stataicObj.push_back(new GameObject(rm->get_Models("DoubleMesh.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(1, 1, 1)));
 		}
 	}
 

@@ -89,7 +89,7 @@ bool getMatrialFromFile(std::string fileName, std::vector<Material*> &matrial, G
 	infile.close();
 	infile.open("obj/" + mtlname);
 	if (done && infile.is_open()) {
-		while (std::getline(infile, readWord)) {
+ 		while (std::getline(infile, readWord)) {
 			if (readWord.substr(0, 6) == "newmtl") {
 				CTR++;
 				matrial.resize(CTR + 1, new Material(def));
