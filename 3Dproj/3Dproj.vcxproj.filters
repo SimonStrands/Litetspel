@@ -100,6 +100,9 @@
     <Filter Include="Source Files\Fysik">
       <UniqueIdentifier>{af046824-402a-45b3-a0ab-4f5be4016f9b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\WindowWithMouse">
+      <UniqueIdentifier>{1de9154b-81a4-43ad-bf25-f12375190e04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -230,6 +233,15 @@
     </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowClass.cpp">
+      <Filter>Source Files\WindowWithMouse</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderWindow.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +391,15 @@
     </ClInclude>
     <ClInclude Include="flags.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowClass.h">
+      <Filter>Source Files\WindowWithMouse</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderWindow.h">
+      <Filter>Source Files\WindowWithMouse</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowContainer.h">
+      <Filter>Source Files\WindowWithMouse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

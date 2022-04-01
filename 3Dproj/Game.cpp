@@ -3,7 +3,9 @@
 //git
 Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
+	mouse = new Mouse();
+	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow, mouse);
+	
 	defRend = new DeferredRendering(gfx);
 	//Create a buffer for the light const buffer(hlsli)
 	CreateConstBuffer(gfx, gfx->getConstBuffers(0), sizeof(*gfx->getLightconstbufferforCS()), gfx->getLightconstbufferforCS());
@@ -18,10 +20,10 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	//this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 640u, 360U);
 	
 	gfx->takeIM(&this->UIManager);
-	mouse = new Mouse();
+	
 	camera = new Camera(gfx, mouse, vec3(0,0,0), vec3(1,0,0));
 	camera->setData();
-	
+	//gfx->getWindosClass().setMouse(mouse);
 	setUpObject();
 	
 	Qtree = new QuadTree(stataicObj, vec2(0, 0), 4, 100);
@@ -83,25 +85,17 @@ void Game::run()
 	static bool once = true;
 	while (msg.message != WM_QUIT && once)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		while (PeekMessage(&msg, gfx->getWindow(), 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		//must look for mouse active
 		if (mouse->getMouseActive()) {
-			mouse->updateMouse(msg);
-			while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
-				mouseEvent me = mouse->ReadEvent();
-				if (me.getType() == mouseEvent::EventType::RAW_MOVE) {
-					camera->addRotation(vec3(me.getPosX() * (float)dt.dt(), -me.getPosY() * dt.dt(), 0));
-				}
-				//std::cout << "x:" << me.getPosX() << "\ny:" << me.getPosY() << std::endl;
+			mouseEvent e = mouse->ReadEvent();
+			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
+				std::cout << "X:" << e.getPosX()<< "\nY:" << e.getPosY() << std::endl;
 			}
 		}
-	
-		
-	
 	
 		gfx->clearScreen();
 		gfx->setTransparant(false);
@@ -278,6 +272,13 @@ void Game::updateShaders(bool vs, bool ps)
 			stataicObj[i]->updatePixelShader(gfx);
 		}
 	}
+}
+
+bool Game::processMessage()
+{
+
+
+	return false;
 }
 
 void Game::setUpObject()

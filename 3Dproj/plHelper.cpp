@@ -283,19 +283,17 @@ bool SetupPipeline(ID3D11Device* device, ID3D11VertexShader**& vShader,
 {
 	std::string vShaderByteCode[4];
 #pragma region shaderloading
+	if (!loadVShader("VertexShader.cso", device, vShader[0], vShaderByteCode[0])) {
+		std::cout << "error" << std::endl;
+	}
 	if (loadVShader("VertexShader.cso", device, vShader[0], vShaderByteCode[0]) &&
 		loadVShader("VertexBillBoard.cso", device, vShader[1], vShaderByteCode[1]) &&
 		loadVShader("VertexDisplaysment.cso",device, vShader[2], vShaderByteCode[2])&&
 		loadVShader("VertexShadow.cso",device, vShader[3], vShaderByteCode[2])&&
 		loadGShader("GeometryShader.cso", device, gShader[0]) &&
 		loadGShader("Debugging_test.cso", device, gShader[1]) &&
-		loadPShader("PixelBillShader.cso", device, pShader[1])&&
-		//
-		loadPShader("DynamicCubicPS.cso", device, pShader[3])&&
-		loadHShader("HullDisplaysment.cso", device, hShader[0])&&
-		loadHShader("PhongTessHull.cso", device, hShader[1])&&
-		loadDShader("DomainDisplaysment.cso", device, dShader[0])&&
-		loadDShader("PhongTessDomain.cso", device, dShader[1]))
+		loadPShader("PixelBillShader.cso", device, pShader[1])
+		)
 	{
 		//continoue
 		if (def_rend) {

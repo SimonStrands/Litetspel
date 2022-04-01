@@ -1,10 +1,8 @@
 #include "Mouse.h"
-#include <iostream>
 
 //use sfml
 Mouse::Mouse()
 {
-	setUpMouse();
 	mouseSense = 0.6;
 	mouse_active = false;
 	once = false;
@@ -179,18 +177,7 @@ void Mouse::onMouseMoveRaw(int x, int y)
 void Mouse::activateMouse()
 {
 	if (GetKeyState(VK_TAB) & 0x8000) {
-		if (!once) {
-			once = true;
-			if (mouse_active) {
-				mouse_active = false;
-			}
-			else {
-				mouse_active = true;
-			}
-		}
-	}
-	else {
-		once = false;
+		mouse_active = true;
 	}
 	if (GetKeyState(VK_ESCAPE) & 0x8000) {
 		mouse_active = false;
@@ -210,9 +197,9 @@ mouseEvent::mouseEvent(const EventType type, const int x, const int y):
 	y(y)
 {}
 
-bool mouseEvent::IsValid() const
+bool mouseEvent::IsValid()
 {
-	return !type == EventType::INVALID;
+	return !(type == EventType::INVALID);
 }
 
 mouseEvent::EventType mouseEvent::getType() const

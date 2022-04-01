@@ -59,8 +59,9 @@ void Graphics::CreateBlendState(int wBlend, bool transparance) {
 	device->CreateBlendState(&bd, &bs[wBlend]);
 }
 
-Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) :
+Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow, Mouse*& mouse) :
 	speed(1.5f)
+	//windowClass(WIDTH, HEIGHT, hInstance, wnd, mouse)
 {
 	fov = 45.f;
 	ratio = 16.f / 9.f;
@@ -93,13 +94,15 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//setting matrixes
 	setProjection();
 	//if delete this happens it will get an error and program will stop working(I want this to happen when I debug)
-	if (!setUpWindow(hInstance, WIDTH, HEIGHT, nCmdShow, wnd)) {
-		std::cerr << "failed" << std::endl;
-	}
-	ImGui_ImplWin32_Init(wnd);
-	if (!SetupD3D11(WIDTH, HEIGHT, wnd, device, immediateContext, swapChain, renderTarget, dsTexture, dsView, viewPort, pRS))
+	//if (setUpWindow(hInstance, WIDTH, HEIGHT, nCmdShow, wnd)) {
+	//	std::cerr << "failed" << std::endl;
+	//}
+	windowClass.Initialize(hInstance, "a", "a", WIDTH, HEIGHT);
+	
+	ImGui_ImplWin32_Init(windowClass.getRenderWindow().getHandle());
+	if (!SetupD3D11(WIDTH, HEIGHT, windowClass.getRenderWindow().getHandle(), device, immediateContext, swapChain, renderTarget, dsTexture, dsView, viewPort, pRS))
 	{
-		std::cerr << "cant set up" << std::endl;
+		//std::cerr << "cant set up" << std::endl;
 		delete this;
 	}
 	if (!SetupPipeline(device, vShader, pShader, gShader, hShader, dShader, inputLayout, tex, sampler))
@@ -130,7 +133,6 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 Graphics::~Graphics()
 {
 	ImGui_ImplDX11_Shutdown();
-	shutDownWindow();
 	
 	inputLayout[0]->Release();
 	inputLayout[1]->Release();
@@ -247,7 +249,7 @@ void Graphics::Update(float dt, vec3 camPos)
 	if (nextFpsUpdate >= 0.5f) {
 		nextFpsUpdate = 0;
 		float fps = 1.f / (float)dt;
-		SetWindowTextA(wnd, std::to_string(fps).c_str());
+		SetWindowTextA(windowClass.getRenderWindow().getHandle(), std::to_string(fps).c_str());
 	}
 }
 
@@ -278,6 +280,10 @@ ID3D11DeviceContext*& Graphics::get_IMctx()
 ID3D11Texture2D*& Graphics::getTexture()
 {
 	return tex;
+}
+HWND& Graphics::getWindow()
+{
+	return this->windowClass.getRenderWindow().getHandle();
 }
 ID3D11VertexShader** Graphics::getVS()
 {
@@ -349,6 +355,11 @@ void Graphics::takeLight(SpotLight** light, int nrOfLights)
 void Graphics::takeIM(ImguiManager* manager)
 {
 	this->imguimanager = manager;
+}
+
+Window& Graphics::getWindosClass()
+{
+	return windowClass;
 }
 
 void Graphics::clearScreen()

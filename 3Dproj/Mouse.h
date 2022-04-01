@@ -1,9 +1,7 @@
 #pragma once
-#include <SFML/Window.hpp>
-#include "Keyboard.h"
-#include "Vec.h"
-#include "WindowHelper.h"
+#include <Windows.h>
 #include <queue>
+#include <iostream>
 
 struct MousePoint
 {
@@ -34,7 +32,7 @@ private:
 public:
 	mouseEvent();
 	mouseEvent(const EventType type, const int x, const int y);
-	bool IsValid() const;
+	bool IsValid();
 	EventType getType() const;
 	MousePoint getPos() const;
 	int getPosX() const;
@@ -59,6 +57,7 @@ public:
 	void changeSense(float newSence);
 	float getSense();
 	bool getMouseActive();
+	void onMouseMoveRaw(int x, int y);
 private:
 	void onLeftPressed(int x, int y);
 	void onLeftReleased(int x, int y);
@@ -69,7 +68,7 @@ private:
 	void onWheelUp(int x, int y);
 	void onWheelDown(int x, int y);
 	void onMouseMove(int x, int y);
-	void onMouseMoveRaw(int x, int y);
+	
 private:
 	void activateMouse();
 	bool mouse_active;
