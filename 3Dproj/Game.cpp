@@ -3,9 +3,9 @@
 //git
 Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-	mouse = new Mouse();
-	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow, mouse);
 	
+	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow, mouse);
+	mouse = gfx->getWindosClass().getMouse();
 	defRend = new DeferredRendering(gfx);
 	//Create a buffer for the light const buffer(hlsli)
 	CreateConstBuffer(gfx, gfx->getConstBuffers(0), sizeof(*gfx->getLightconstbufferforCS()), gfx->getLightconstbufferforCS());
@@ -90,10 +90,12 @@ void Game::run()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		if (mouse->getMouseActive()) {
+		/*Read Mouse*/
+		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
 			mouseEvent e = mouse->ReadEvent();
 			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
-				std::cout << "X:" << e.getPosX()<< "\nY:" << e.getPosY() << std::endl;
+				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
+				//camera->addRotation(vec3(e.getPosX() * dt.dt(), e.getPosY() * dt.dt(), 0));
 			}
 		}
 	

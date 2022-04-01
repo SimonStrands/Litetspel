@@ -27,6 +27,7 @@ public:
 	void setRotation(vec3 newRot);
 	void setPosition(vec3 newpos);
 	void addRotation(vec3 addRot);
+	void rotateCameraMouse(vec3 Rot, float dt);
 	void movePos(vec3 move);
 	//void lookDir(vec3 lookdir); //don't know how to make these yet
 	//void lookAt(vec3 lookat);	  //don't know how to make these yet

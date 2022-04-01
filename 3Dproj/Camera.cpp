@@ -7,7 +7,7 @@ Camera::Camera(Graphics *&gfx, Mouse* mouse, vec3 pos, vec3 rot)
 	this->Lcbd = gfx->getLightconstbufferforCS();
 	this->Vcbd = gfx->getVertexconstbuffer();
 	this->mouse = mouse;
-	this->mouseSensitivity = 5.0f;
+	this->mouseSensitivity = 1.0f;
 	this->xCamPos = pos.x;
 	this->yCamPos = pos.y;
 	this->zCamPos = pos.z;
@@ -131,6 +131,12 @@ void Camera::addRotation(vec3 addRot)
 {
 	xCamRot += addRot.x;
 	yCamRot += addRot.y;
+}
+
+void Camera::rotateCameraMouse(vec3 Rot, float dt)
+{
+	xCamRot += Rot.x * (float)dt * mouseSensitivity;
+	yCamRot -= Rot.y * (float)dt * mouseSensitivity;
 }
 
 void Camera::movePos(vec3 move)
