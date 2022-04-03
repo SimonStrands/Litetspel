@@ -30,7 +30,7 @@ bool loadVShader(std::string name, ID3D11Device* device, ID3D11VertexShader*& vS
 	HRESULT hr = device->CreateVertexShader(shaderData.c_str(), shaderData.length(), nullptr, &vShader);
 	if (FAILED(hr))
 	{
-		std::cerr << "cannot create vertexShader" << std::endl;
+		std::cerr << "cannot create vertexShader " << name << std::endl;
 		return false;
 	}
 
@@ -289,13 +289,8 @@ bool SetupPipeline(ID3D11Device* device, ID3D11VertexShader**& vShader,
 		loadVShader("VertexShadow.cso",device, vShader[3], vShaderByteCode[2])&&
 		loadGShader("GeometryShader.cso", device, gShader[0]) &&
 		loadGShader("Debugging_test.cso", device, gShader[1]) &&
-		loadPShader("PixelBillShader.cso", device, pShader[1])&&
-		//
-		loadPShader("DynamicCubicPS.cso", device, pShader[3])&&
-		loadHShader("HullDisplaysment.cso", device, hShader[0])&&
-		loadHShader("PhongTessHull.cso", device, hShader[1])&&
-		loadDShader("DomainDisplaysment.cso", device, dShader[0])&&
-		loadDShader("PhongTessDomain.cso", device, dShader[1]))
+		loadPShader("PixelBillShader.cso", device, pShader[1])
+		)
 	{
 		//continoue
 		if (def_rend) {

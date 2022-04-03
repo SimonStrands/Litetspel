@@ -1,11 +1,9 @@
 #include "Mouse.h"
-#include <iostream>
 
 //use sfml
 Mouse::Mouse()
 {
-	setUpMouse();
-	mouseSense = 0.6;
+	mouseSense = 0.6f;
 	mouse_active = false;
 	once = false;
 	x = y = 0;
@@ -16,18 +14,6 @@ Mouse::~Mouse()
 {
 }
 
-void Mouse::updateMouse(MSG msg)
-{
-	int x = LOWORD(msg.lParam);
-	int y = HIWORD(msg.lParam);
-	switch (msg.message) {
-	case WM_MOUSEMOVE:
-		onMouseMove(x, y);
-		break;
-	case WM_CHAR:
-		break;
-	} 
-}
 
 bool Mouse::IsLeftDown()
 {
@@ -87,6 +73,7 @@ float Mouse::getSense()
 
 bool Mouse::getMouseActive()
 {
+	activateMouse();
 	return mouse_active;
 }
 
@@ -150,21 +137,15 @@ void Mouse::onMouseMove(int x, int y)
 	mouseBuffer.push(m);
 }
 
+void Mouse::onMouseMoveRaw(int x, int y)
+{
+	this->mouseBuffer.push(mouseEvent(mouseEvent::EventType::RAW_MOVE, x, y));
+}
+
 void Mouse::activateMouse()
 {
 	if (GetKeyState(VK_TAB) & 0x8000) {
-		if (!once) {
-			once = true;
-			if (mouse_active) {
-				mouse_active = false;
-			}
-			else {
-				mouse_active = true;
-			}
-		}
-	}
-	else {
-		once = false;
+		mouse_active = true;
 	}
 	if (GetKeyState(VK_ESCAPE) & 0x8000) {
 		mouse_active = false;
@@ -184,9 +165,9 @@ mouseEvent::mouseEvent(const EventType type, const int x, const int y):
 	y(y)
 {}
 
-bool mouseEvent::IsValid() const
+bool mouseEvent::IsValid()
 {
-	return !type == EventType::INVALID;
+	return !(type == EventType::INVALID);
 }
 
 mouseEvent::EventType mouseEvent::getType() const

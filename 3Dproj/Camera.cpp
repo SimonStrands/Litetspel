@@ -7,7 +7,7 @@ Camera::Camera(Graphics *&gfx, Mouse* mouse, vec3 pos, vec3 rot)
 	this->Lcbd = gfx->getLightconstbufferforCS();
 	this->Vcbd = gfx->getVertexconstbuffer();
 	this->mouse = mouse;
-	this->mouseSensitivity = 5.0f;
+	this->mouseSensitivity = 1.0f;
 	this->xCamPos = pos.x;
 	this->yCamPos = pos.y;
 	this->zCamPos = pos.z;
@@ -127,6 +127,25 @@ void Camera::setPosition(vec3 newpos)
 	this->zCamPos = newpos.z;
 }
 
+void Camera::addRotation(vec3 addRot)
+{
+	xCamRot += addRot.x;
+	yCamRot += addRot.y;
+}
+
+void Camera::rotateCameraMouse(vec3 Rot, float dt)
+{
+	xCamRot += Rot.x * (float)dt * mouseSensitivity;
+	yCamRot -= Rot.y * (float)dt * mouseSensitivity;
+}
+
+void Camera::movePos(vec3 move)
+{
+	xCamPos += move.x;
+	yCamPos += move.y;
+	zCamPos += move.z;
+}
+
 void Camera::setData(float FOVRadians, float viewRatio, float nearDist, float farDist)
 {
 	this->ratio = viewRatio;
@@ -152,12 +171,12 @@ void Camera::movement()
 	Lcbd->cameraPos.element[1] = yCamPos;
 	Lcbd->cameraPos.element[2] = zCamPos;
 }
-bool once = false;
+
 void Camera::handleEvent(float dt)
 {
 	translation = DirectX::XMFLOAT3(0, 0, 0);
 	//movement
-	if (getkey('W') && !once) {
+	if (getkey('W')) {
 		translation = DirectX::XMFLOAT3(0, 0, -(float)dt);
 		Translate(dt);
 	}

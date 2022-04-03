@@ -4,11 +4,13 @@
 #include <DirectXMath.h>
 #include "plHelper.h"
 #include "D311Helper.h"
-#include "WindowHelper.h"
 #include "Light.h"
 #include "deltaTime.h"
 #include "rotation.h"
 #include "Keyboard.h"
+#include "WindowClass.h"
+//#include "WindowHelper.h"
+#include "Mouse.h"
 
 class ImguiManager;
 
@@ -87,12 +89,12 @@ private:
 	//window
 	const UINT WIDTH = 1280;
 	const UINT HEIGHT = 720;
-	HWND wnd;
 public:
-	Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow);
+	Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow, Mouse*& mouse);
 	virtual ~Graphics();
 	void RsetViewPort();
 private:
+	Window windowClass;
 	//D3D11
 	ID3D11Device* device;
 	ID3D11DeviceContext* immediateContext;
@@ -160,6 +162,7 @@ public:
 	ID3D11DeviceContext*& get_IMctx();
 	ID3D11Texture2D*& getTexture();
 
+	HWND& getWindow();
 	/// shaders ///
 	ID3D11VertexShader** getVS();
 	ID3D11PixelShader** getPS();
@@ -181,6 +184,7 @@ public:
 	void takeLight(SpotLight **light, int nrOfLights);
 	/*make gfx have imgui*/
 	void takeIM(ImguiManager* manager);
+	Window& getWindosClass();
 
 	//update
 	void Update(float dt, vec3 camPos = vec3(0,0,0));

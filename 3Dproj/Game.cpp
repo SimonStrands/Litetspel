@@ -1,9 +1,14 @@
 #include "Game.h"
+#include <chrono>
+#include <thread>
 
-//git
 Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
+	
+	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow, mouse);
+	mouse = gfx->getWindosClass().getMouse();
+	keyboard = gfx->getWindosClass().getKeyboard();
+
 	defRend = new DeferredRendering(gfx);
 	//Create a buffer for the light const buffer(hlsli)
 	CreateConstBuffer(gfx, gfx->getConstBuffers(0), sizeof(*gfx->getLightconstbufferforCS()), gfx->getLightconstbufferforCS());
@@ -14,14 +19,14 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	setUpLights();
 	
 	//shadow map needs to take more lights
-	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1280U, 720U);
+	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1920U, 1080U);
 	//this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 640u, 360U);
 	
 	gfx->takeIM(&this->UIManager);
-	mouse = new Mouse();
+	
 	camera = new Camera(gfx, mouse, vec3(0,0,0), vec3(1,0,0));
 	camera->setData();
-	
+	//gfx->getWindosClass().setMouse(mouse);
 	setUpObject();
 	
 	Qtree = new QuadTree(stataicObj, vec2(0, 0), 4, 100);
@@ -52,7 +57,6 @@ Game::~Game()
 
 	//logic and other
 	delete defRend;
-	delete mouse;
 	delete camera;
 	if (shadowMap != nullptr) {
 		delete shadowMap;
@@ -80,25 +84,31 @@ Game::~Game()
 
 void Game::run()
 {
-	static bool once = true;
-	while (msg.message != WM_QUIT && once)
+	static bool once = false;
+	while (msg.message != WM_QUIT && gfx->getWindosClass().ProcessMessages())
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+		
+		if (keyboard->isKeyPressed('P')) {
+			gfx->getWindosClass().HideCoursor();
 		}
-		//must look for mouse active
-		if (mouse->getMouseActive()) {
-			mouse->updateMouse(msg);
+		else if (keyboard->isKeyPressed('O')) {
+			gfx->getWindosClass().ShowCoursor();
 		}
-
+		/*Read Mouse*/
 		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
-			mouseEvent me = mouse->ReadEvent();
-			std::cout << "x:" << me.getPosX() << "\ny:" << me.getPosY() << std::endl;
+			mouseEvent e = mouse->ReadEvent();
+			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
+				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
+			}
+			//if (e.getType() == mouseEvent::EventType::LPress) {
+			//	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, camera->getPos(), vec3(0, 0, 0), vec3(0.5f, 0.5f, 0.5f)));
+			//}
 		}
-
-
+		//f (keyboard->isKeyPressed('W')) {
+		//	std::cout << "penis" << std::endl;
+		//	camera->movePos(vec3(0, 0, 100 * dt.dt()));
+		//
+		
 		gfx->clearScreen();
 		gfx->setTransparant(false);
 		//for shadow
@@ -119,8 +129,8 @@ void Game::run()
 		camera->setRotation(camLR);
 		gfx->setProjection(0);//last can be dir light
 		gfx->RsetViewPort();
-
-
+		
+		
 		Update();
 		updateShaders();
 		if (def_rend){
@@ -139,7 +149,7 @@ void Game::run()
 		}
 		this->ForwardDraw();
 		gfx->present(this->lightNr);
-
+	
 		//once = false;
 	}
 	printf("quit"); 
@@ -148,7 +158,6 @@ void Game::run()
 void Game::Update()
 {
 	dt.restartClock();
-	//keyboard
 	
 	camera->updateCamera((float)dt.dt());
 	if (getkey('N')) {
@@ -166,7 +175,7 @@ void Game::Update()
 	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y) + vec3(0, 1.57f, 0));
 
 	for (int i = 0; i < billboardGroups.size(); i++) {
-		billboardGroups[i]->update(dt.dt(), gfx);
+		billboardGroups[i]->update((float)dt.dt(), gfx);
 	}
 	for (int i = 0; i < LightVisualizers.size(); i++) {
 		LightVisualizers[i]->setPos(light[i]->getPos());
@@ -274,6 +283,13 @@ void Game::updateShaders(bool vs, bool ps)
 			stataicObj[i]->updatePixelShader(gfx);
 		}
 	}
+}
+
+bool Game::processMessage()
+{
+
+
+	return false;
 }
 
 void Game::setUpObject()
