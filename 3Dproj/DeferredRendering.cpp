@@ -82,8 +82,8 @@ bool DeferredRendering::InitDeferred(int w, int h)
 	}
 	ID3D11Texture2D* depthStencilTex = nullptr;
 	D3D11_TEXTURE2D_DESC depthStencilBufferDesc{};
-	depthStencilBufferDesc.Width = gfx->getWH().x;
-	depthStencilBufferDesc.Height = gfx->getWH().y;
+	depthStencilBufferDesc.Width = (UINT)gfx->getWH().x;
+	depthStencilBufferDesc.Height = (UINT)gfx->getWH().y;
 	depthStencilBufferDesc.MipLevels = 1;
 	depthStencilBufferDesc.ArraySize = 1;
 	depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;

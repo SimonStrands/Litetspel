@@ -16,7 +16,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	setUpLights();
 	
 	//shadow map needs to take more lights
-	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1280U, 720U);
+	this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 1920U, 1080U);
 	//this->shadowMap = new ShadowMap((SpotLight**)light, nrOfLight, gfx, 640u, 360U);
 	
 	gfx->takeIM(&this->UIManager);
@@ -54,7 +54,6 @@ Game::~Game()
 
 	//logic and other
 	delete defRend;
-	delete mouse;
 	delete camera;
 	if (shadowMap != nullptr) {
 		delete shadowMap;
@@ -82,23 +81,23 @@ Game::~Game()
 
 void Game::run()
 {
-	static bool once = true;
-	while (msg.message != WM_QUIT && once)
+	static bool once = false;
+	while (msg.message != WM_QUIT && gfx->getWindosClass().ProcessMessages())
 	{
-		while (PeekMessage(&msg, gfx->getWindow(), 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+		if (getkey('P')) {
+			gfx->getWindosClass().HideCoursor();
+		}
+		else if (getkey('O')) {
+			gfx->getWindosClass().ShowCoursor();
 		}
 		/*Read Mouse*/
 		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
 			mouseEvent e = mouse->ReadEvent();
 			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
 				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
-				//camera->addRotation(vec3(e.getPosX() * dt.dt(), e.getPosY() * dt.dt(), 0));
 			}
 		}
-	
+		
 		gfx->clearScreen();
 		gfx->setTransparant(false);
 		//for shadow
@@ -119,8 +118,8 @@ void Game::run()
 		camera->setRotation(camLR);
 		gfx->setProjection(0);//last can be dir light
 		gfx->RsetViewPort();
-	
-	
+		
+		
 		Update();
 		updateShaders();
 		if (def_rend){
@@ -166,7 +165,7 @@ void Game::Update()
 	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y) + vec3(0, 1.57f, 0));
 
 	for (int i = 0; i < billboardGroups.size(); i++) {
-		billboardGroups[i]->update(dt.dt(), gfx);
+		billboardGroups[i]->update((float)dt.dt(), gfx);
 	}
 	for (int i = 0; i < LightVisualizers.size(); i++) {
 		LightVisualizers[i]->setPos(light[i]->getPos());

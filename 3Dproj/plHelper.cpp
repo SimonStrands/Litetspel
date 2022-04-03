@@ -30,7 +30,7 @@ bool loadVShader(std::string name, ID3D11Device* device, ID3D11VertexShader*& vS
 	HRESULT hr = device->CreateVertexShader(shaderData.c_str(), shaderData.length(), nullptr, &vShader);
 	if (FAILED(hr))
 	{
-		std::cerr << "cannot create vertexShader" << std::endl;
+		std::cerr << "cannot create vertexShader " << name << std::endl;
 		return false;
 	}
 
@@ -283,9 +283,6 @@ bool SetupPipeline(ID3D11Device* device, ID3D11VertexShader**& vShader,
 {
 	std::string vShaderByteCode[4];
 #pragma region shaderloading
-	if (!loadVShader("VertexShader.cso", device, vShader[0], vShaderByteCode[0])) {
-		std::cout << "error" << std::endl;
-	}
 	if (loadVShader("VertexShader.cso", device, vShader[0], vShaderByteCode[0]) &&
 		loadVShader("VertexBillBoard.cso", device, vShader[1], vShaderByteCode[1]) &&
 		loadVShader("VertexDisplaysment.cso",device, vShader[2], vShaderByteCode[2])&&

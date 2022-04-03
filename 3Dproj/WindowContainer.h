@@ -6,6 +6,7 @@ class WindowContainer
 {
 public:
 	WindowContainer();
+	virtual ~WindowContainer();
 	LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	RenderWindow& getRenderWindow();
 	Mouse*& getMouse();

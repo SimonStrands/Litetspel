@@ -105,7 +105,7 @@ void BillBoardGroup::update(float dt, Graphics*& gfx)
 
 	gfx->get_IMctx()->CSSetUnorderedAccessViews(0, 1, &billUAV, nullptr);
 
-	gfx->get_IMctx()->Dispatch(this->billboards.size()/8, 1, 1);//calc how many groups we need
+	gfx->get_IMctx()->Dispatch((UINT)this->billboards.size()/8, 1, 1);//calc how many groups we need
 
 	//nulla unorderedaccesview
 	ID3D11UnorderedAccessView* nullUAV = nullptr;

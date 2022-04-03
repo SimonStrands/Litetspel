@@ -18,3 +18,23 @@ void Window::Update()
 
 	//read mouse
 }
+
+void Window::HideCoursor()
+{
+	confineCoursor();
+	while (::ShowCursor(FALSE) >= 0);
+}
+
+void Window::ShowCoursor()
+{
+	ClipCursor(nullptr);
+	while (::ShowCursor(TRUE) < 0);
+}
+
+void Window::confineCoursor()
+{
+	RECT rect;
+	GetClientRect(this->getRenderWindow().getHandle(), &rect);
+	MapWindowPoints(this->getRenderWindow().getHandle(), nullptr, reinterpret_cast<POINT*>(&rect), 2);
+	ClipCursor(&rect);
+}

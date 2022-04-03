@@ -61,7 +61,6 @@ void Graphics::CreateBlendState(int wBlend, bool transparance) {
 
 Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow, Mouse*& mouse) :
 	speed(1.5f)
-	//windowClass(WIDTH, HEIGHT, hInstance, wnd, mouse)
 {
 	fov = 45.f;
 	ratio = 16.f / 9.f;
@@ -69,15 +68,15 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	nearPlane = 0.1f;
 	nrOfObject = 0;
 	Pg_pConstantBuffer = nullptr;
-
+	
 	inputLayout = new ID3D11InputLayout * [2]{nullptr, nullptr};
-
+	
 	vShader = new ID3D11VertexShader * [4]{ nullptr, nullptr, nullptr };//3 is used
 	gShader = new ID3D11GeometryShader * [4]{ nullptr, nullptr };//2 is used
 	pShader = new ID3D11PixelShader * [4] { nullptr, nullptr,nullptr, nullptr };//4 is used
 	hShader = new ID3D11HullShader * [4] { nullptr,nullptr };//2 is used
 	dShader = new ID3D11DomainShader * [4] { nullptr,nullptr };//2 is used
-
+	
 	//setting normal value for pcbd
 	this->LCBG.lightColor = { 1,1,1,0 };
 	this->LCBG.cameraPos = { 0,0,1,1 };
@@ -90,13 +89,11 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	this->pcbd.ka = { 0.5f,0.5f,0.5f,1 };
 	this->pcbd.kd = { 1.f,1.f,1.f,0 };
 	this->pcbd.ks = {1.f,1.f,1.f,0};
-	//
+	
 	//setting matrixes
 	setProjection();
 	//if delete this happens it will get an error and program will stop working(I want this to happen when I debug)
-	//if (setUpWindow(hInstance, WIDTH, HEIGHT, nCmdShow, wnd)) {
-	//	std::cerr << "failed" << std::endl;
-	//}
+
 	windowClass.Initialize(hInstance, "a", "a", WIDTH, HEIGHT);
 	
 	ImGui_ImplWin32_Init(windowClass.getRenderWindow().getHandle());
@@ -160,7 +157,7 @@ Graphics::~Graphics()
 	delete[] gShader;
 	delete[] hShader;
 	delete[] dShader;
-
+	
 	if (device != nullptr) {
 		device->Release();
 	}
@@ -191,7 +188,7 @@ Graphics::~Graphics()
 	bs[0]->Release();
 	bs[1]->Release();
 	delete[] bs;
-
+	
 	if (sampler != nullptr) {
 		sampler->Release();
 	}

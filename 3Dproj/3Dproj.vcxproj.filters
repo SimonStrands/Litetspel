@@ -238,10 +238,10 @@
       <Filter>Source Files\WindowWithMouse</Filter>
     </ClCompile>
     <ClCompile Include="WindowContainer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\WindowWithMouse</Filter>
     </ClCompile>
     <ClCompile Include="RenderWindow.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\WindowWithMouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
