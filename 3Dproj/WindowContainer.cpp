@@ -3,6 +3,8 @@
 WindowContainer::WindowContainer()
 {
 	this->mouse = new Mouse();
+	this->keyboard = new Keyboard();
+
 	static bool raw_input_initialized = false;
 	if (raw_input_initialized == false)
 	{
@@ -32,6 +34,18 @@ LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 {
 	switch (uMsg)
 	{
+	case WM_KEYUP:
+	{
+		unsigned char ch = static_cast<unsigned char>(wParam);
+		keyboard->onKeyReleased(ch);
+		return 0;
+	}
+	case WM_KEYDOWN:
+	{
+		unsigned char ch = static_cast<unsigned char>(wParam);
+		keyboard->onKeyDown(ch);
+		return 0;
+	}
 	case WM_INPUT:
 	{
 		if (mouse->getMouseActive()) {
@@ -46,7 +60,7 @@ LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 					RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(rawdata.get());
 					if (raw->header.dwType == RIM_TYPEMOUSE)
 					{
-						//std::cout << raw->data.mouse.lLastX << ":" << raw->data.mouse.lLastY << std::endl;
+						std::cout << raw->data.mouse.lLastX << ":" << raw->data.mouse.lLastY << std::endl;
 						mouse->onMouseMoveRaw(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
 					}
 				}
@@ -67,6 +81,11 @@ RenderWindow& WindowContainer::getRenderWindow()
 Mouse*& WindowContainer::getMouse()
 {
 	return this->mouse;
+}
+
+Keyboard*& WindowContainer::getKeyboard()
+{
+	return this->keyboard;
 }
 
 

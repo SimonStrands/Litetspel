@@ -1,11 +1,14 @@
 #include "Game.h"
+#include <chrono>
+#include <thread>
 
-//git
 Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
 	
 	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow, mouse);
 	mouse = gfx->getWindosClass().getMouse();
+	keyboard = gfx->getWindosClass().getKeyboard();
+
 	defRend = new DeferredRendering(gfx);
 	//Create a buffer for the light const buffer(hlsli)
 	CreateConstBuffer(gfx, gfx->getConstBuffers(0), sizeof(*gfx->getLightconstbufferforCS()), gfx->getLightconstbufferforCS());
@@ -84,12 +87,16 @@ void Game::run()
 	static bool once = false;
 	while (msg.message != WM_QUIT && gfx->getWindosClass().ProcessMessages())
 	{
+		
 		if (getkey('P')) {
 			gfx->getWindosClass().HideCoursor();
 		}
 		else if (getkey('O')) {
 			gfx->getWindosClass().ShowCoursor();
 		}
+		//if (keyboard->isKeyPressed('A')) {
+		//	std::cout << "hello" << std::endl;
+		//}
 		/*Read Mouse*/
 		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
 			mouseEvent e = mouse->ReadEvent();

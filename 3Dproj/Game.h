@@ -43,6 +43,7 @@ private:
 	DeltaTime dt;
 	ImguiManager UIManager;
 	Mouse* mouse;
+	Keyboard* keyboard;
 	Camera* camera;
 	ShadowMap* shadowMap;
 	QuadTree* Qtree;
