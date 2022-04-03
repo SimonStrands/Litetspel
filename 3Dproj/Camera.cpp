@@ -143,6 +143,7 @@ void Camera::movePos(vec3 move)
 {
 	xCamPos += move.x;
 	yCamPos += move.y;
+	zCamPos += move.z;
 }
 
 void Camera::setData(float FOVRadians, float viewRatio, float nearDist, float farDist)
@@ -170,12 +171,12 @@ void Camera::movement()
 	Lcbd->cameraPos.element[1] = yCamPos;
 	Lcbd->cameraPos.element[2] = zCamPos;
 }
-bool once = false;
+
 void Camera::handleEvent(float dt)
 {
 	translation = DirectX::XMFLOAT3(0, 0, 0);
 	//movement
-	if (getkey('W') && !once) {
+	if (getkey('W')) {
 		translation = DirectX::XMFLOAT3(0, 0, -(float)dt);
 		Translate(dt);
 	}

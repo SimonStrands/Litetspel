@@ -88,22 +88,26 @@ void Game::run()
 	while (msg.message != WM_QUIT && gfx->getWindosClass().ProcessMessages())
 	{
 		
-		if (getkey('P')) {
+		if (keyboard->isKeyPressed('P')) {
 			gfx->getWindosClass().HideCoursor();
 		}
-		else if (getkey('O')) {
+		else if (keyboard->isKeyPressed('O')) {
 			gfx->getWindosClass().ShowCoursor();
 		}
-		//if (keyboard->isKeyPressed('A')) {
-		//	std::cout << "hello" << std::endl;
-		//}
 		/*Read Mouse*/
 		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
 			mouseEvent e = mouse->ReadEvent();
 			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
 				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
 			}
+			//if (e.getType() == mouseEvent::EventType::LPress) {
+			//	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, camera->getPos(), vec3(0, 0, 0), vec3(0.5f, 0.5f, 0.5f)));
+			//}
 		}
+		//f (keyboard->isKeyPressed('W')) {
+		//	std::cout << "penis" << std::endl;
+		//	camera->movePos(vec3(0, 0, 100 * dt.dt()));
+		//
 		
 		gfx->clearScreen();
 		gfx->setTransparant(false);
@@ -154,7 +158,6 @@ void Game::run()
 void Game::Update()
 {
 	dt.restartClock();
-	//keyboard
 	
 	camera->updateCamera((float)dt.dt());
 	if (getkey('N')) {

@@ -14,36 +14,6 @@ Mouse::~Mouse()
 {
 }
 
-void Mouse::updateMouse(MSG msg)
-{
-	int x = LOWORD(msg.lParam);
-	int y = HIWORD(msg.lParam);
-	switch (msg.message) {
-	case WM_MOUSEMOVE:
-		onMouseMove(x, y);
-		break;
-	case WM_INPUT:
-		UINT dataSize = 0;
-
-		GetRawInputData(reinterpret_cast<HRAWINPUT>(msg.lParam), RID_INPUT, NULL, &dataSize, sizeof(RAWINPUTHEADER));
-
-		if (dataSize > 0) 
-		{
-			std::unique_ptr<BYTE[]> rawdata = std::make_unique<BYTE[]>(dataSize);
-			if (GetRawInputData(reinterpret_cast<HRAWINPUT>(msg.lParam), RID_INPUT, rawdata.get(), &dataSize, sizeof(RAWINPUTHEADER)) == dataSize) 
-			{
-				RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(rawdata.get());
-				if (raw->header.dwType == RIM_TYPEMOUSE)
-				{
-					this->onMouseMoveRaw(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
-				}
-			}
-		}
-		 
-		DefWindowProc(msg.hwnd, msg.message, msg.wParam, msg.lParam);
-		break;
-	} 
-}
 
 bool Mouse::IsLeftDown()
 {

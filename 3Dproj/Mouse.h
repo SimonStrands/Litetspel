@@ -44,7 +44,6 @@ public:
 	Mouse();
 	virtual ~Mouse();
 
-	void updateMouse(MSG msg);
 	bool IsLeftDown();
 	bool isMiddleDown();
 	bool isRightDown();
@@ -58,7 +57,6 @@ public:
 	float getSense();
 	bool getMouseActive();
 	void onMouseMoveRaw(int x, int y);
-private:
 	void onLeftPressed(int x, int y);
 	void onLeftReleased(int x, int y);
 	void onRightPressed(int x, int y);

@@ -28,6 +28,7 @@ WindowContainer::WindowContainer()
 WindowContainer::~WindowContainer()
 {
 	delete mouse;
+	delete keyboard;
 }
 
 LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -46,6 +47,69 @@ LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		keyboard->onKeyDown(ch);
 		return 0;
 	}
+	case WM_MOUSEMOVE:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse->onMouseMove(x, y);
+		return 0; 
+	}
+	case WM_LBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse->onLeftPressed(x, y);
+		return 0;
+	}
+	case WM_RBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse->onRightPressed(x, y);
+		return 0;
+	}
+	case WM_MBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse->onMiddlePressed(x, y);
+		return 0;
+	}
+	case WM_LBUTTONUP:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse->onLeftReleased(x, y);
+		return 0;
+	}
+	case WM_RBUTTONUP:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse->onRightReleased(x, y);
+		return 0;
+	}
+	case WM_MBUTTONUP:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		mouse->onMiddleReleased(x, y);
+		return 0;
+	}
+	case WM_MOUSEWHEEL:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
+		{
+			mouse->onWheelUp(x, y);
+		}
+		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+		{
+			mouse->onWheelDown(x, y);
+		}
+		return 0;
+	}
 	case WM_INPUT:
 	{
 		if (mouse->getMouseActive()) {
@@ -60,7 +124,7 @@ LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 					RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(rawdata.get());
 					if (raw->header.dwType == RIM_TYPEMOUSE)
 					{
-						std::cout << raw->data.mouse.lLastX << ":" << raw->data.mouse.lLastY << std::endl;
+						//std::cout << raw->data.mouse.lLastX << ":" << raw->data.mouse.lLastY << std::endl;
 						mouse->onMouseMoveRaw(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
 					}
 				}
