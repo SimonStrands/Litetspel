@@ -2,7 +2,8 @@
 #include <chrono>
 #include <thread>
 
-Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
+Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow):
+	soundManager(1)
 {
 	
 	gfx = new Graphics(hInstance, hPrevInstance, lpCmdLine, nCmdShow, mouse);
@@ -46,6 +47,12 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	gfx->takeLight((SpotLight**)light, nrOfLight);
 	
 	lightNr = 0;
+	//soundManager.playMusic("audio/More_Plastic-Rewind.wav");
+	soundManager.loadSound("audio/ah.wav", 5, "ah1");
+	//soundManager.loadSound("audio/ah2.wav", 1, "ah2");
+	//soundManager.loadSound("audio/moh.wav", 1, "moh");
+	//soundManager.loadSound("audio/oh1.wav", 1, "oh1");
+
 }
 
 Game::~Game() 
@@ -100,9 +107,9 @@ void Game::run()
 			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
 				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
 			}
-			//if (e.getType() == mouseEvent::EventType::LPress) {
-			//	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, camera->getPos(), vec3(0, 0, 0), vec3(0.5f, 0.5f, 0.5f)));
-			//}
+			if (e.getType() == mouseEvent::EventType::LPress) {
+				soundManager.playSound("ah1", obj[2]->getPos());
+			}
 		}
 		//f (keyboard->isKeyPressed('W')) {
 		//	std::cout << "penis" << std::endl;
@@ -181,7 +188,8 @@ void Game::Update()
 		LightVisualizers[i]->setPos(light[i]->getPos());
 		LightVisualizers[i]->setRot(vec3(0 , light[i]->getRotation().x, -light[i]->getRotation().y) + vec3(0,1.57f,0));
 	}
-	
+	camera->calcFURVectors();
+	soundManager.update(camera->getPos(), camera->getForwardVec());
 	gfx->Update((float)dt.dt(), camera->getPos());
 
 #pragma region camera_settings
@@ -300,7 +308,7 @@ void Game::setUpObject()
 	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
 	////
 	//////OBJECTS
-	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(10.f, 5.f, 10.f), vec3(-1.56f, 1.56f, 3.2f), vec3(1.f, 1.f, 1.f)));
+	obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, -50.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	////walls
