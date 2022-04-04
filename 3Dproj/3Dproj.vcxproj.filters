@@ -252,6 +252,9 @@
     <ClCompile Include="TrashCollector.cpp">
       <Filter>Source Files\Other</Filter>
     </ClCompile>
+    <ClCompile Include="skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D311Helper.h">
@@ -412,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="Convertions.h">
       <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox.h">
+      <Filter>Header Files\Graphic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -25,7 +25,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	
 	gfx->takeIM(&this->UIManager);
 	
-	camera = new Camera(gfx, mouse, vec3(0,0,0), vec3(1,0,0));
+	camera = new Camera(gfx, mouse, vec3(-5,0,0), vec3(1,0,0));
 	camera->setData();
 	//gfx->getWindosClass().setMouse(mouse);
 	setUpObject();
@@ -232,9 +232,14 @@ void Game::DrawToBuffer()
 	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(gfx->getPS()[0], nullptr, 0);
-	for (int i = 0; i < LightVisualizers.size(); i++) {
-		LightVisualizers[i]->draw(gfx, false);
+
+	gfx->get_IMctx()->OMSetRenderTargets(1, &gfx->getRenderTarget(), nullptr);
+	if (getkey('F')) {
+		for (int i = 0; i < LightVisualizers.size(); i++) {
+			LightVisualizers[i]->draw(gfx, false);
+		}
 	}
+	gfx->get_IMctx()->OMSetRenderTargets(1, &gfx->getRenderTarget(), gfx->getDepthStencil());
 }
 
 void Game::ForwardDraw()
@@ -309,6 +314,7 @@ void Game::setUpObject()
 	////
 	//////OBJECTS
 	obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
+	//obj.push_back(new GameObject(rm->get_Models("skybox_cube.obj", gfx), gfx, vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(100.f, 100.f, 100.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, -50.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	////walls
@@ -383,7 +389,7 @@ void Game::setUpLights()
 void Game::setUpParticles()
 {
 	//add the billboards here
-	billboardGroups.push_back(new BillBoardGroup(gfx, rm->getFire(), 10, vec3(0, 0, 0), vec3(5, 5, 5)));
+	billboardGroups.push_back(new BillBoardGroup(gfx, rm->getFire(), 1000, vec3(0, 0, 0), vec3(5, 5, 5)));
 
 	//if billboard have animation add it here
 	billboardGroups[0]->setAnimation(6, 1, 0.16f);

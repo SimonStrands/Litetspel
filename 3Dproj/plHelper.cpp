@@ -216,6 +216,47 @@ bool CreateInputLayoutBill(ID3D11Device* device, ID3D11InputLayout*& inputLayout
 	return !FAILED(hr);
 }
 
+bool CreateTextureNR(std::string file, ID3D11Device* device, ID3D11Texture2D*& tex, ID3D11ShaderResourceView*& texSRV)
+{
+	struct stat buffer;
+	if (!(stat(file.c_str(), &buffer) == 0)) {
+		return false;
+	}
+
+	int textureWidth;
+	int textureHeight;
+	int channels;
+
+	unsigned char* textureData = stbi_load(file.c_str(), &textureWidth, &textureHeight, &channels, 4);
+
+	D3D11_TEXTURE2D_DESC desc;
+	desc.Width = textureWidth;
+	desc.Height = textureHeight;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA data;
+	data.pSysMem = (void*)textureData;
+	data.SysMemPitch = textureWidth * 4;
+	data.SysMemSlicePitch = textureWidth * textureHeight * 4;
+
+	if (FAILED(device->CreateTexture2D(&desc, &data, &tex))) {
+		printf("cannot create texture");
+		return false;
+	}
+	HRESULT hr = device->CreateShaderResourceView(tex, nullptr, &texSRV);
+	delete[] textureData;
+
+	return !FAILED(hr);
+}
+
 bool CreateTexture(std::string file, ID3D11Device* device, ID3D11Texture2D*& tex, ID3D11ShaderResourceView*& texSRV) 
 {
 	struct stat buffer;

@@ -147,6 +147,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/SFML/include;$(SolutionDir)/External Libs\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -201,6 +202,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="rotation.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="skybox.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TileAnimation.cpp" />
     <ClCompile Include="TrashCollector.cpp" />
@@ -227,6 +229,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="CreateBuffer.h" />
+    <ClInclude Include="skybox.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="WindowContainer.h" />
     <ClInclude Include="imconfig.h" />
