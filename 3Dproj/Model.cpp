@@ -3,7 +3,7 @@
 
 ModelObj::ModelObj(const std::string& ModelFile, Graphics*& gfx, ID3D11ShaderResourceView** def)
 {
-	getMatrialFromFile(ModelFile, matrial, gfx, def);
+	getMatrialFromFileObj(ModelFile, matrial, gfx, def);
 	if (!readObjFile(mMeshes, ModelFile, matrial, gfx, boxSize)) {
 		std::cout << "couldn't load " << ModelFile << std::endl;
 		MessageBox(nullptr, L"sorry couldn't load file look in terminal for more info", L"ERROR", MB_ICONWARNING | MB_OK);
@@ -16,7 +16,13 @@ ModelObj::ModelObj()
 
 void ModelObj::init(const std::string& ModelFile, Graphics*& gfx, ID3D11ShaderResourceView** def)
 {
-	getMatrialFromFile(ModelFile, matrial, gfx, def);
+	std::cout << ModelFile.substr(ModelFile.length() - 3,3) << std::endl;
+	if (ModelFile.substr(ModelFile.length() - 3, 3) == "obj") {
+		getMatrialFromFileObj(ModelFile, matrial, gfx, def);
+	}
+	else {
+		getMatrialFromFile(ModelFile, matrial, gfx, def);
+	}
 	if (!readObjFile(mMeshes, ModelFile, matrial, gfx, boxSize)) {
 		std::cout << "couldn't load " << ModelFile << std::endl;
 		MessageBox(nullptr, L"sorry couldn't load file look in terminal for more info", L"ERROR", MB_ICONWARNING | MB_OK);

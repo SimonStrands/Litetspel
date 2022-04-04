@@ -340,7 +340,7 @@ void Game::setUpObject()
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	*/
 	
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
+	stataicObj.push_back(new GameObject(rm->get_Models("fbxtest.fbx", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
 	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(100,0,100), vec3(0, 0, 0), vec3(1, 1, 1)));
 	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-112,0,-100), vec3(0, 0, 0), vec3(1, 1, 1)));
 	float gw = 10;
@@ -355,12 +355,12 @@ void Game::setUpObject()
 void Game::setUpLights()
 {
 	//current max number is set in graphics.cpp and transforms.hlsli
-	nrOfLight = 2;
+	nrOfLight = 1;
 	light = new Light * [nrOfLight];
 
 	//create the lights with 
 	light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f));
-	light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
+	//light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
 	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
 	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
 
