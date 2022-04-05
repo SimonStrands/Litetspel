@@ -20,19 +20,22 @@ ID3D11Buffer*& Graphics::getConstBuffers(int i)
 }
 
 
-void Graphics::setProjection(int flag)
+void Graphics::setProjection(int flag, float fov)
 {
 	//setting projection matrix
 	switch (flag)
 	{
 	case 0://normal
-		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
+		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(this->fov), ratio, nearPlane, farPlane);
 		break;
 	case 1://orthographic
 		vcbd.projection.element = DirectX::XMMatrixOrthographicLH(50, 50, nearPlane, farPlane);
 		break;
 	case 2://6:6
-		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), 1, nearPlane, farPlane);
+		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(this->fov), 1, nearPlane, farPlane);
+		break;
+	case 3://6:6
+		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
 		break;
 	default:
 		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
@@ -59,7 +62,7 @@ void Graphics::CreateBlendState(int wBlend, bool transparance) {
 	device->CreateBlendState(&bd, &bs[wBlend]);
 }
 
-Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) :
+Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow, Mouse*& mouse) :
 	speed(1.5f)
 {
 	fov = 45.f;
@@ -68,15 +71,15 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	nearPlane = 0.1f;
 	nrOfObject = 0;
 	Pg_pConstantBuffer = nullptr;
-
+	
 	inputLayout = new ID3D11InputLayout * [2]{nullptr, nullptr};
-
+	
 	vShader = new ID3D11VertexShader * [4]{ nullptr, nullptr, nullptr };//3 is used
 	gShader = new ID3D11GeometryShader * [4]{ nullptr, nullptr };//2 is used
 	pShader = new ID3D11PixelShader * [4] { nullptr, nullptr,nullptr, nullptr };//4 is used
 	hShader = new ID3D11HullShader * [4] { nullptr,nullptr };//2 is used
 	dShader = new ID3D11DomainShader * [4] { nullptr,nullptr };//2 is used
-
+	
 	//setting normal value for pcbd
 	this->LCBG.lightColor = { 1,1,1,0 };
 	this->LCBG.cameraPos = { 0,0,1,1 };
@@ -89,17 +92,17 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	this->pcbd.ka = { 0.5f,0.5f,0.5f,1 };
 	this->pcbd.kd = { 1.f,1.f,1.f,0 };
 	this->pcbd.ks = {1.f,1.f,1.f,0};
-	//
+	
 	//setting matrixes
 	setProjection();
 	//if delete this happens it will get an error and program will stop working(I want this to happen when I debug)
-	if (!setUpWindow(hInstance, WIDTH, HEIGHT, nCmdShow, wnd)) {
-		std::cerr << "failed" << std::endl;
-	}
-	ImGui_ImplWin32_Init(wnd);
-	if (!SetupD3D11(WIDTH, HEIGHT, wnd, device, immediateContext, swapChain, renderTarget, dsTexture, dsView, viewPort, pRS))
+
+	windowClass.Initialize(hInstance, "a", "a", WIDTH, HEIGHT);
+	
+	ImGui_ImplWin32_Init(windowClass.getRenderWindow().getHandle());
+	if (!SetupD3D11(WIDTH, HEIGHT, windowClass.getRenderWindow().getHandle(), device, immediateContext, swapChain, renderTarget, dsTexture, dsView, viewPort, pRS))
 	{
-		std::cerr << "cant set up" << std::endl;
+		//std::cerr << "cant set up" << std::endl;
 		delete this;
 	}
 	if (!SetupPipeline(device, vShader, pShader, gShader, hShader, dShader, inputLayout, tex, sampler))
@@ -130,7 +133,6 @@ Graphics::Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 Graphics::~Graphics()
 {
 	ImGui_ImplDX11_Shutdown();
-	shutDownWindow();
 	
 	inputLayout[0]->Release();
 	inputLayout[1]->Release();
@@ -158,7 +160,7 @@ Graphics::~Graphics()
 	delete[] gShader;
 	delete[] hShader;
 	delete[] dShader;
-
+	
 	if (device != nullptr) {
 		device->Release();
 	}
@@ -189,7 +191,7 @@ Graphics::~Graphics()
 	bs[0]->Release();
 	bs[1]->Release();
 	delete[] bs;
-
+	
 	if (sampler != nullptr) {
 		sampler->Release();
 	}
@@ -247,7 +249,7 @@ void Graphics::Update(float dt, vec3 camPos)
 	if (nextFpsUpdate >= 0.5f) {
 		nextFpsUpdate = 0;
 		float fps = 1.f / (float)dt;
-		SetWindowTextA(wnd, std::to_string(fps).c_str());
+		SetWindowTextA(windowClass.getRenderWindow().getHandle(), std::to_string(fps).c_str());
 	}
 }
 
@@ -278,6 +280,10 @@ ID3D11DeviceContext*& Graphics::get_IMctx()
 ID3D11Texture2D*& Graphics::getTexture()
 {
 	return tex;
+}
+HWND& Graphics::getWindow()
+{
+	return this->windowClass.getRenderWindow().getHandle();
 }
 ID3D11VertexShader** Graphics::getVS()
 {
@@ -349,6 +355,11 @@ void Graphics::takeLight(SpotLight** light, int nrOfLights)
 void Graphics::takeIM(ImguiManager* manager)
 {
 	this->imguimanager = manager;
+}
+
+Window& Graphics::getWindosClass()
+{
+	return windowClass;
 }
 
 void Graphics::clearScreen()

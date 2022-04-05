@@ -121,13 +121,13 @@ bool SetupD3D11(UINT width, UINT height,
         std::cerr << "create interface" << std::endl;
         return false;
     }
-
+    
     if (!CreateRenderTargetView(device, swapChain, renderTarget))
     {
         std::cerr << "create rendertarget view" << std::endl;
         return false;
     }
-
+    
     if (!CreateDepthStencil(device, width, height, dsTexture, dsView))
     {
         std::cerr << "create depth" << std::endl;
@@ -138,7 +138,7 @@ bool SetupD3D11(UINT width, UINT height,
         std::cerr << "create rasterizer" << std::endl;
         return false;
     }
-
+    
     SetViewport(viewPort, width, height);
 
     return true;

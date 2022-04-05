@@ -73,7 +73,7 @@ void ResourceManager::loadThings(Graphics*& gfx)
 		Models.insert(std::make_pair(names[i], model));
 	}
 	for (int i = 0; i < _countof(names); i++) {
-		int sizeOfMatrials = Models.find(names[i])->second->getMatrial().size();
+		int sizeOfMatrials = (int)Models.find(names[i])->second->getMatrial().size();
 		ModelObj* model = Models.find(names[i])->second;
 		for (int p = 0; p < sizeOfMatrials; p++) {
 			TC::GetInst().add(model->getMatrial()[p]);

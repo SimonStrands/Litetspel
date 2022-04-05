@@ -18,7 +18,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
     OutPut.y -= (5) * dt;
     if (OutPut.y < -10)
     {
-        OutPut.y = (10 * rand) + (float)DTid.x;
+        OutPut.y = (10 * rand);
     }
     
     particlePos[DTid.x * 3 + 0] = OutPut.x;//x

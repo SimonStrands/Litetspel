@@ -97,7 +97,7 @@ void ShadowMap::inUpdateShadow(int whatNrOfLight)
 	ID3D11RenderTargetView* pNullRTV = NULL;
 	gfx->get_IMctx()->OMSetRenderTargets(1, &pNullRTV, this->Getdepthview(whatNrOfLight));
 
-	gfx->setProjection((int)this->light[whatNrOfLight]->whatOfLight());
+	gfx->getVertexconstbuffer()->projection.element = this->light[whatNrOfLight]->getLightProj();
 	
 	gfx->getVertexconstbuffer()->view.element = this->light[whatNrOfLight]->getLightView();
 }
