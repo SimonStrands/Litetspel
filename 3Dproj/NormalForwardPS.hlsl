@@ -29,7 +29,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	//float3 final = (diffuseTex.Sample(testSampler, input.uv).xyz);
     //
 	//return float4(final, 1);
-    float3 color = diffuseTex.Sample(testSampler, input.uv);
+    float4 color = diffuseTex.Sample(testSampler, input.uv);
 
     float4 FinalPixel = float4(0, 0, 0, 0);
     for (int i = 0; i < nrOfLight; i++)
@@ -72,6 +72,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
         }
     }
     //return float4(FinalPixel.xyz, 1);
-    return float4(FinalPixel.xyz, 1);
+    return float4(FinalPixel.xyz, color.a);
 
 }
