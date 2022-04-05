@@ -17,11 +17,18 @@ public:
 	vec3& getRotation();
 	vec3& getPos();
 	vec3& getColor();
+	int getType() const;
+	DirectX::XMMATRIX getLightViewProj() const;
+	float getFallOff()const;
+	//get light and view matrix from light
+	DirectX::XMMATRIX getLightProj() const;
 protected:
+	DirectX::XMMATRIX Projection;
 	wTofL flag;
-private:
 	vec3 color;
 	vec3 pos;
+	vec3 rot;
+	float fallOff;
 };
 
 
@@ -34,16 +41,10 @@ public:
 	void addRot(vec3 rot);
 	//get view matrix from light
 	DirectX::XMMATRIX getLightView();
-	//get light and view matrix from light
-	DirectX::XMMATRIX getLightViewProj();
-	DirectX::XMMATRIX getLightProj();
 	//what type of light if its spotlight or directional light
 	const wTofL whatOfLight();
-	
-protected:
-	DirectX::XMMATRIX Projection;
 private:
-	vec3 rot;
+	
 };
 
 class DirLight : public SpotLight {

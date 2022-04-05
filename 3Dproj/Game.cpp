@@ -44,7 +44,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 		UIManager.takeLight(light[i]);
 	}
 	
-	gfx->takeLight((SpotLight**)light, nrOfLight);
+	
 	
 	lightNr = 0;
 	//soundManager.playMusic("audio/More_Plastic-Rewind.wav");
@@ -389,7 +389,8 @@ void Game::setUpLights()
 	light = new Light * [nrOfLight];
 
 	//create the lights with 
-	light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f), 100, 100);
+	//light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f), 100, 100);
+	light[0] = new PointLight(vec3(0, 8, 8), 200, vec3(1,0,0));
 	//light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
 	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
 	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
@@ -400,6 +401,7 @@ void Game::setUpLights()
 
 	//say to graphics/shaders how many lights we have
 	gfx->getLightconstbufferforCS()->nrOfLights.element = nrOfLight;
+	gfx->takeLight(light, nrOfLight);
 }
 
 void Game::setUpParticles()

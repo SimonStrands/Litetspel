@@ -198,14 +198,14 @@ bool CreateInputLayoutOwn(ID3D11Device* device, ID3D11InputLayout*& inputLayout,
 	return !FAILED(hr);
 }
 
-bool CreateTextureCube(std::string files[], ID3D11Device* device, ID3D11Texture2D*& tex, ID3D11ShaderResourceView*& texSRV, float wh)
+bool CreateTextureCube(std::string files[], ID3D11Device* device, ID3D11Texture2D*& tex, ID3D11ShaderResourceView*& texSRV, UINT wh)
 {
 	HRESULT hr;
 	const int nrOfRTV = 6;
 
 	D3D11_TEXTURE2D_DESC textureDesc;
-	textureDesc.Width = 1024;
-	textureDesc.Height = 1024;
+	textureDesc.Width = wh;
+	textureDesc.Height = wh;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = nrOfRTV;
 	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

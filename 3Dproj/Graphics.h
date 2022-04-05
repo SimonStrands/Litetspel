@@ -9,7 +9,6 @@
 #include "rotation.h"
 #include "Keyboard.h"
 #include "WindowClass.h"
-//#include "WindowHelper.h"
 #include "Mouse.h"
 
 class ImguiManager;
@@ -30,7 +29,7 @@ struct LCBGS : public CB {
 		float element[MAXNROFLIGHTS][4];
 	}lightColor;
 	struct {
-		float element[MAXNROFLIGHTS][4];//6 pc of float4
+		float element[MAXNROFLIGHTS][4];//6 pc of float4 // last one decide what type
 	}lightPos;
 	struct {
 		DirectX::XMMATRIX element[MAXNROFLIGHTS];//projection is in here
@@ -133,7 +132,7 @@ private:
 	ID3D11SamplerState* sampler;
 
 	//objects
-	SpotLight** light;
+	Light** light;
 	int nrOfLights;
 	ImguiManager *imguimanager;
 
@@ -177,11 +176,11 @@ public:
 	ID3D11Buffer*& getConstBuffers(int i = 0);
 	IDXGISwapChain*& getSwapChain();
 	void setTransparant(bool transparance);
-	SpotLight** getLight();
+	Light** getLight();
 	vec2 getWH();
 	
 	/*make so gfx have lights*/
-	void takeLight(SpotLight **light, int nrOfLights);
+	void takeLight(Light **light, int nrOfLights);
 	/*make gfx have imgui*/
 	void takeIM(ImguiManager* manager);
 	Window& getWindosClass();

@@ -22,13 +22,13 @@ Texture2D diffuseTex : register(t0); // diffuse base color
 Texture2DArray<float4> shadowMapping : register(t1);
 SamplerState testSampler;
 
+float Attenuate(uniform float attConst, uniform float attLin, uniform float attQuad, const in float distFragToL)
+{
+    return 1.0f / (attConst + attLin * distFragToL + attQuad * (distFragToL * distFragToL));
+}
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-	//add the texture
-	//float3 final = (diffuseTex.Sample(testSampler, input.uv).xyz);
-    //
-	//return float4(final, 1);
     float4 color = diffuseTex.Sample(testSampler, input.uv);
 
     float4 FinalPixel = float4(0, 0, 0, 0);
@@ -41,17 +41,24 @@ float4 main(PixelShaderInput input) : SV_TARGET
         shadowMapCoords.xyz = shadowMapCoords.xyz / shadowMapCoords.w;
 
         float4 SM = shadowMapping.SampleLevel(testSampler, float3(shadowMapCoords.x, shadowMapCoords.y, i), 0);
-
+        
+        float dist = length(lightPos[i].xyz - input.fragpos.xyz);
         //ambient
         float3 ambient_light = ka.xyz * lightColor[i].xyz;
-        const float bias = 0.00001f;
-        if (SM.r > shadowMapCoords.z - bias &&
-            shadowMapCoords.z <= 1.0f &&//E
+        static const float bias = 0.00001f; 
+        float attenuation = 1;
+        if (lightPos[i].w == 2)
+        {
+            attenuation = Attenuate(1, 1 / lightColor[i].w, 0.001f, dist);
+        }
+        if (lightPos[i].w == 2 && dist < (lightColor[i].w * 2) ||
+            SM.r > shadowMapCoords.z - bias &&
+            shadowMapCoords.z <= 1.0f && //E
             shadowMapCoords.x < 1 && shadowMapCoords.x > 0 &&
-            shadowMapCoords.y < 1 && shadowMapCoords.y > 0 &&
-            dot(input.normal.xyz, lightDir.xyz) > -0.1
+            shadowMapCoords.y < 1 && shadowMapCoords.y > 0
             )
         {
+
             float3 viewDir = normalize(cameraPos.xyz - input.fragpos.xyz);
             //defuse
             float3 defuse_light;
@@ -63,7 +70,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
             float spec = pow(max(dot(viewDir, reflectDir), 0.0), ks.w);
             float3 specular = ks.xyz * spec;
 
-            FinalPixel.xyz += saturate(ambient_light + defuse_light) + specular;
+            //FinalPixel.xyz += saturate(ambient_light + defuse_light) + specular;
+            FinalPixel.xyz += saturate(ambient_light * attenuation + defuse_light * attenuation) + specular * attenuation;
         }
         else
         {

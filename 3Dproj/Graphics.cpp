@@ -214,7 +214,6 @@ void Graphics::Update(float dt, vec3 camPos)
 	}
 
 	for (int i = 0; i < nrOfLights; i++) {
-		LCBG.lightView.element[i] = this->light[i]->getLightViewProj();
 		LCBG.lightPos.element[i][0] = light[i]->getPos().x;
 		LCBG.lightPos.element[i][1] = light[i]->getPos().y;
 		LCBG.lightPos.element[i][2] = light[i]->getPos().z;
@@ -222,8 +221,8 @@ void Graphics::Update(float dt, vec3 camPos)
 		LCBG.lightColor.element[i][0] = light[i]->getColor().x;
 		LCBG.lightColor.element[i][1] = light[i]->getColor().y;
 		LCBG.lightColor.element[i][2] = light[i]->getColor().z;
-
-		LCBG.lightPos.element[i][3] = 0;
+		
+	
 	}
 	D3D11_MAPPED_SUBRESOURCE resource;
 	immediateContext->Map(this->Pg_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -326,7 +325,7 @@ ID3D11DepthStencilView* Graphics::getDepthStencil()
 {
 	return this->dsView;
 }
-SpotLight **Graphics::getLight()
+Light **Graphics::getLight()
 {
 	return this->light;
 }
@@ -346,10 +345,16 @@ void Graphics::setTransparant(bool transparance)
 	}
 }
 
-void Graphics::takeLight(SpotLight** light, int nrOfLights)
+void Graphics::takeLight(Light** light, int nrOfLights)
 {
 	this->nrOfLights = nrOfLights;
 	this->light = light;
+	/*set constant buffer*/
+	for (int i = 0; i < nrOfLights; i++) {
+		LCBG.lightView.element[i] = this->light[i]->getLightViewProj();
+		LCBG.lightPos.element[i][3] = light[i]->getType();
+		LCBG.lightColor.element[i][3] = light[i]->getFallOff();
+	}
 }
 
 void Graphics::takeIM(ImguiManager* manager)
