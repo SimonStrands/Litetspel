@@ -1,8 +1,6 @@
 #pragma once
-#include <Windows.h>
 #include "Graphics.h"
 #include "deltaTime.h"
-#include "Mouse.h"
 #include "Camera.h"
 #include "imguiManager.h"
 #include "ResourceManager.h"
@@ -17,9 +15,11 @@
 #include "DynamicCubeEnviroment.h"
 #include "QuadTree.h"
 #include "TrashCollector.h"
+#include "SoundManager.h"
 
 #include "DebugCamera.h"
 #include "flags.h"
+#include "skybox.h"
 
 //git
 class Game {
@@ -31,8 +31,8 @@ public:
 	void ForwardDraw();
 	void DrawAllShadowObject();//without any otherShaders
 	void updateShaders(bool vs = true, bool ps = true);
+	bool processMessage();
 private:
-	//width and height of window
 	MSG msg = {};
 	Graphics *gfx;
 	ResourceManager* rm;
@@ -44,9 +44,12 @@ private:
 	DeltaTime dt;
 	ImguiManager UIManager;
 	Mouse* mouse;
+	Keyboard* keyboard;
 	Camera* camera;
 	ShadowMap* shadowMap;
 	QuadTree* Qtree;
+	SoundManager soundManager;
+	SkyBox* Space;
 	void setUpObject();
 	void setUpLights();
 	void setUpParticles();
