@@ -489,6 +489,12 @@
     <FxCompile Include="NormalForwardPS.hlsl">
       <Filter>Resource Files\Shaders\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="SkyBoxPS.hlsl">
+      <Filter>Resource Files\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxVS.hlsl">
+      <Filter>Resource Files\Shaders\Vertex</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Help.txt">

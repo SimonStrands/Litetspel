@@ -87,8 +87,8 @@ class Graphics {
 
 private:
 	//window
-	const UINT WIDTH = 1280;
-	const UINT HEIGHT = 720;
+	const UINT WIDTH = 1920;
+	const UINT HEIGHT = 1080;
 public:
 	Graphics(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow, Mouse*& mouse);
 	virtual ~Graphics();
@@ -148,7 +148,7 @@ private:
 
 public:
 	/*0 = perspective, 1 = orthographic*/
-	void setProjection(int flag = 0);
+	void setProjection(int flag = 0, float fov = 45);
 	//get const Buffer
 	Vcb *getVertexconstbuffer();
 	Pcb *getPixelconstbuffer();

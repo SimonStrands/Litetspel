@@ -41,6 +41,11 @@ DirectX::XMMATRIX SpotLight::getLightViewProj()
 	return temp;
 }
 
+DirectX::XMMATRIX SpotLight::getLightProj()
+{
+	return this->Projection;
+}
+
 DirectX::XMMATRIX SpotLight::getLightView()
 {
 	DirectX::XMMATRIX temp(
@@ -95,4 +100,10 @@ DirLight::DirLight(vec3 pos, vec3 rot, float W, float H):
 {
 	this->flag = wTofL::DIR;
 	this->Projection = DirectX::XMMatrixOrthographicLH(W, H, 0.1f, 2000.f);
+}
+
+PointLight::PointLight(vec3 pos, float falloff, vec3 Color):
+	Light(pos)
+{
+	this->flag = wTofL::PLIGHT;
 }

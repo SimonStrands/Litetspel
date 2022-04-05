@@ -52,6 +52,17 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	//soundManager.loadSound("audio/ah2.wav", 1, "ah2");
 	//soundManager.loadSound("audio/moh.wav", 1, "moh");
 	//soundManager.loadSound("audio/oh1.wav", 1, "oh1");
+	
+
+	std::string skyboxTextures[6] = {
+		"Textures/Skybox/sky_stars_01bk.png",
+		"Textures/Skybox/sky_stars_01dn.png",
+		"Textures/Skybox/sky_stars_01ft.png",
+		"Textures/Skybox/sky_stars_01lf.png",
+		"Textures/Skybox/sky_stars_01rt.png",
+		"Textures/Skybox/sky_stars_01up.png",
+	};
+	Space = new SkyBox(rm->get_Models("skybox_cube.obj", gfx), gfx, obj[0]->getPos(), skyboxTextures);
 
 }
 
@@ -85,6 +96,7 @@ Game::~Game()
 	for (int i = 0; i < billboardGroups.size(); i++) {
 		delete billboardGroups[i];
 	}
+	delete Space;
 	
 }
 
@@ -108,7 +120,7 @@ void Game::run()
 				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
 			}
 			if (e.getType() == mouseEvent::EventType::LPress) {
-				soundManager.playSound("ah1", obj[2]->getPos());
+				//soundManager.playSound("ah1", obj[2]->getPos());
 			}
 		}
 		//f (keyboard->isKeyPressed('W')) {
@@ -191,6 +203,7 @@ void Game::Update()
 	camera->calcFURVectors();
 	soundManager.update(camera->getPos(), camera->getForwardVec());
 	gfx->Update((float)dt.dt(), camera->getPos());
+	Space->update(obj[0]->getPos());
 
 #pragma region camera_settings
 	if (getkey('C')) {
@@ -214,32 +227,34 @@ void Game::Update()
 
 void Game::DrawToBuffer()
 {	
+	
+
 	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	gfx->get_IMctx()->IASetInputLayout(gfx->getInputLayout()[0]);
 	gfx->get_IMctx()->GSSetShader(nullptr, nullptr, 0);
+
+	gfx->get_IMctx()->OMSetRenderTargets(1, &gfx->getRenderTarget(), nullptr);
+	Space->draw(gfx);
+	gfx->get_IMctx()->OMSetRenderTargets(1, &gfx->getRenderTarget(), gfx->getDepthStencil());
+
 	gfx->get_IMctx()->VSSetShader(gfx->getVS()[0], nullptr, 0);
-	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
-	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
 	for (int i = 0; i < obj.size(); i++) {
 		obj[i]->draw(gfx);
 	}
     camera->calcFURVectors();
 	Qtree->draw(gfx, camera);
 	Qtree->clearAlrDraw();
-
+	
 	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	gfx->get_IMctx()->VSSetShader(gfx->getVS()[0], nullptr, 0);
-	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
-	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(gfx->getPS()[0], nullptr, 0);
-
-	gfx->get_IMctx()->OMSetRenderTargets(1, &gfx->getRenderTarget(), nullptr);
+	
+	
 	if (getkey('F')) {
 		for (int i = 0; i < LightVisualizers.size(); i++) {
 			LightVisualizers[i]->draw(gfx, false);
 		}
 	}
-	gfx->get_IMctx()->OMSetRenderTargets(1, &gfx->getRenderTarget(), gfx->getDepthStencil());
 }
 
 void Game::ForwardDraw()
@@ -249,8 +264,6 @@ void Game::ForwardDraw()
 	gfx->get_IMctx()->VSSetShader(gfx->getVS()[1], nullptr, 0);
 	gfx->get_IMctx()->GSSetShader(gfx->getGS()[0], nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(gfx->getPS()[1], nullptr, 0);
-	gfx->get_IMctx()->HSSetShader(nullptr, nullptr, 0);
-	gfx->get_IMctx()->DSSetShader(nullptr, nullptr, 0);
 	for (int i = 0; i < billboardGroups.size(); i++) {
 		billboardGroups[i]->draw(gfx);
 	}
@@ -262,7 +275,7 @@ void Game::DrawAllShadowObject()
 	gfx->get_IMctx()->GSSetShader(nullptr, nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(nullptr, nullptr, 0);
 	for (int i = 0; i < obj.size(); i++) {
-
+	
 		obj[i]->draw(gfx, true);
 	}
 	camera->calcFURVectors();
@@ -284,6 +297,7 @@ void Game::updateShaders(bool vs, bool ps)
 		for (int i = 0; i < LightVisualizers.size(); i++) {
 			LightVisualizers[i]->updateVertexShader(gfx);
 		}
+		Space->updateVertexShader(gfx);
 	}
 	if (ps) {
 		for (int i = 0; i < obj.size(); i++) {
@@ -295,6 +309,7 @@ void Game::updateShaders(bool vs, bool ps)
 		for (int i = 0; i < stataicObj.size(); i++) {
 			stataicObj[i]->updatePixelShader(gfx);
 		}
+		Space->updatePixelShader(gfx);
 	}
 }
 
@@ -310,15 +325,15 @@ void Game::setUpObject()
 	////////OBJECTS///////////
 	//cameras
 	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(2.f, 2.0f, 2.0f)));//main
-	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
+	//obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
 	////
 	//////OBJECTS
-	obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
+	//obj.push_back(new GameObject(rm->get_Models("skybox_cube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(100.f, 100.f, 100.f)));
 	//obj.push_back(new GameObject(rm->get_Models("skybox_cube.obj", gfx), gfx, vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(100.f, 100.f, 100.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, -50.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	////walls
-	obj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(0.f, 5.f, 20.f),  vec3(-PI/2, -PI/2, PI), vec3(20.f, 20.f, 20.f)));
+	//obj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(0.f, 5.f, 20.f),  vec3(-PI/2, -PI/2, PI), vec3(20.f, 20.f, 20.f)));
 	//obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(100.f, 5.f, 100.f),  vec3(0, 0.f, 0),   vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(-100.f, 5.f, -100.f), vec3(0, 0, 0),  vec3(1.f, 1.f, 1.f)));
 	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-20.f, 5.f, 0.f), vec3(-PI/2, PI, PI),   vec3(20.f, 20.f, 20.f)));
@@ -354,7 +369,7 @@ void Game::setUpObject()
 	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 	*/
 	
-	stataicObj.push_back(new GameObject(rm->get_Models("fbxtest.fbx", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
+	//stataicObj.push_back(new GameObject(rm->get_Models("fbxtest.fbx", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
 	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(100,0,100), vec3(0, 0, 0), vec3(1, 1, 1)));
 	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-112,0,-100), vec3(0, 0, 0), vec3(1, 1, 1)));
 	float gw = 10;
@@ -362,6 +377,7 @@ void Game::setUpObject()
 	for (int x = 0; x < gn; x++) {
 		for (int y = 0; y < gn; y++) {
 			stataicObj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(10, 10, 10)));
+			//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(1, 1, 1)));
 		}
 	}
 }
@@ -373,7 +389,7 @@ void Game::setUpLights()
 	light = new Light * [nrOfLight];
 
 	//create the lights with 
-	light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f));
+	light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f), 100, 100);
 	//light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
 	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
 	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
@@ -389,7 +405,7 @@ void Game::setUpLights()
 void Game::setUpParticles()
 {
 	//add the billboards here
-	billboardGroups.push_back(new BillBoardGroup(gfx, rm->getFire(), 1000, vec3(0, 0, 0), vec3(5, 5, 5)));
+	billboardGroups.push_back(new BillBoardGroup(gfx, rm->getFire(), 1, vec3(0, 0, 0), vec3(5, 5, 5)));
 
 	//if billboard have animation add it here
 	billboardGroups[0]->setAnimation(6, 1, 0.16f);

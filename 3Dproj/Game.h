@@ -19,6 +19,7 @@
 
 #include "DebugCamera.h"
 #include "flags.h"
+#include "skybox.h"
 
 //git
 class Game {
@@ -48,6 +49,7 @@ private:
 	ShadowMap* shadowMap;
 	QuadTree* Qtree;
 	SoundManager soundManager;
+	SkyBox* Space;
 	void setUpObject();
 	void setUpLights();
 	void setUpParticles();

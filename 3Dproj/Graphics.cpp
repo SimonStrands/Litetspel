@@ -20,19 +20,22 @@ ID3D11Buffer*& Graphics::getConstBuffers(int i)
 }
 
 
-void Graphics::setProjection(int flag)
+void Graphics::setProjection(int flag, float fov)
 {
 	//setting projection matrix
 	switch (flag)
 	{
 	case 0://normal
-		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
+		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(this->fov), ratio, nearPlane, farPlane);
 		break;
 	case 1://orthographic
 		vcbd.projection.element = DirectX::XMMatrixOrthographicLH(50, 50, nearPlane, farPlane);
 		break;
 	case 2://6:6
-		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), 1, nearPlane, farPlane);
+		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(this->fov), 1, nearPlane, farPlane);
+		break;
+	case 3://6:6
+		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
 		break;
 	default:
 		vcbd.projection.element = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(fov), ratio, nearPlane, farPlane);
