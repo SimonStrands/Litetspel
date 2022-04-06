@@ -109,6 +109,15 @@
     <Filter Include="Source Files\Sounds">
       <UniqueIdentifier>{780dd629-f461-482b-a70f-e287133558a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{8ea8cee2-d946-453f-a778-97564afd3712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{9214c5e4-263f-4c23-9b06-e849873eeba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\UI">
+      <UniqueIdentifier>{8a145bb4-baaf-4c39-a19d-24c79da939a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -418,6 +427,18 @@
     </ClInclude>
     <ClInclude Include="skybox.h">
       <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UISprite.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIString.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UISymbols.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
