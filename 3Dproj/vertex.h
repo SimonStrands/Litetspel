@@ -32,3 +32,10 @@ struct vertex {
 	}
 };
 
+struct UIVertex {
+	float pos[2];
+	float uv[2];
+	UIVertex() {
+		
+	}
+};

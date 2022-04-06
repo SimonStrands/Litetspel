@@ -268,10 +268,10 @@
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="UISprite.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="UIElements.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -527,6 +527,12 @@
     </FxCompile>
     <FxCompile Include="SkyBoxVS.hlsl">
       <Filter>Resource Files\Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="UIVertexShader.hlsl">
+      <Filter>Resource Files\Shaders\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="UIPixelShader.hlsl">
+      <Filter>Resource Files\Shaders\UI</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

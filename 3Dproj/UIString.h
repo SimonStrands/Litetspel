@@ -7,6 +7,6 @@ public:
 	std::vector<UISymbols> symbols;
 	vec2 position;
 
-	void draw();
+	void draw(Graphics*& gfx);
 private:
 };

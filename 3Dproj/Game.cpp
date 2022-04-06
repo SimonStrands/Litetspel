@@ -245,10 +245,8 @@ void Game::DrawToBuffer()
 	Qtree->draw(gfx, camera);
 	Qtree->clearAlrDraw();
 	
-	gfx->get_IMctx()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	gfx->get_IMctx()->VSSetShader(gfx->getVS()[0], nullptr, 0);
 	gfx->get_IMctx()->PSSetShader(gfx->getPS()[0], nullptr, 0);
-	
 	
 	if (getkey('F')) {
 		for (int i = 0; i < LightVisualizers.size(); i++) {

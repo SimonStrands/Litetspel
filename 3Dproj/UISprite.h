@@ -8,6 +8,6 @@ public:
 	//SpritePtr from ResoruceManager
 	ID3D11ShaderResourceView* sprite;	
 
-	void draw() override;
+	void draw(Graphics*& gfx) override;
 private:
 };
