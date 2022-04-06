@@ -1,5 +1,6 @@
 #pragma once
+#include "UIElements.h"
 
-class UISprite {
+class UISprite : public UIElements {
 
 };

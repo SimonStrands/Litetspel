@@ -440,6 +440,9 @@
     <ClInclude Include="UISprite.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="UIElements.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

@@ -231,6 +231,7 @@
     <ClInclude Include="CreateBuffer.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="UIElements.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UISprite.h" />
     <ClInclude Include="UIString.h" />

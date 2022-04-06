@@ -1,5 +1,13 @@
 #pragma once
+#include "UIElements.h"
+#include "vec.h"
+#include <d3d11.h>
 
-class UISymbols {
-
+class UISymbols : public UIElements {
+public: 
+	UISymbols();
+	void symbol_to_uv(char symbol);
+private:
+	vec2 UV_coords;
+	ID3D11ShaderResourceView* spriteSheet;
 };
