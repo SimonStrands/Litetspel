@@ -528,6 +528,12 @@
     <FxCompile Include="SkyBoxVS.hlsl">
       <Filter>Resource Files\Shaders\Vertex</Filter>
     </FxCompile>
+    <FxCompile Include="UIVertexShader.hlsl">
+      <Filter>Resource Files\Shaders\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="UIPixelShader.hlsl">
+      <Filter>Resource Files\Shaders\UI</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Help.txt">
