@@ -428,16 +428,16 @@
     <ClInclude Include="skybox.h">
       <Filter>Header Files\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager.h">
-      <Filter>Header Files\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UISprite.h">
-      <Filter>Header Files\UI</Filter>
-    </ClInclude>
     <ClInclude Include="UIString.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="UISymbols.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UISprite.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
