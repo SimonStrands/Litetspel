@@ -21,6 +21,7 @@ public:
 #pragma region Textures
 	ID3D11ShaderResourceView** getDef();
 	ID3D11ShaderResourceView* getFire();
+	ID3D11ShaderResourceView* getSprite(std::string textureFile, Graphics*& gfx);
 #pragma endregion
 	Material* getdefMatrial;
 	ModelObj* get_Models(std::string key);
@@ -34,6 +35,7 @@ private:
 #pragma endregion
 
 	std::map<std::string, ModelObj*> Models;
+	std::map<std::string, ID3D11ShaderResourceView*> Sprites;
 	Material* defMatrial;
 
 	void addMaterialToTrashCollector(ModelObj* model);

@@ -22,6 +22,11 @@ ResourceManager::~ResourceManager()
 	for (it = Models.begin(); it != Models.end(); it++) {
 		delete it->second;
 	}
+	//delete sprites TODO
+	std::map<std::string, ID3D11ShaderResourceView*>::iterator sit;
+	for (sit = Sprites.begin(); sit != Sprites.end(); sit++) {
+		sit->second->Release();
+	}
 	delete defMatrial;
 }
 
@@ -113,6 +118,19 @@ ID3D11ShaderResourceView** ResourceManager::getDef()
 ID3D11ShaderResourceView* ResourceManager::getFire()
 {
 	return this->Fire;
+}
+
+ID3D11ShaderResourceView* ResourceManager::getSprite(std::string textureFile, Graphics*& gfx)
+{
+	ID3D11Texture2D* tex;
+	if (Sprites.find(textureFile) == Sprites.end()) {
+		//its not found try to add it to the library
+		ID3D11ShaderResourceView* SRVptr;
+		CreateTexture(textureFile, gfx->getDevice(), tex, SRVptr);
+		Sprites.insert(std::make_pair(textureFile, SRVptr));
+	}
+	//else we return it
+	return Sprites.find(textureFile)->second;
 }
 
 void ResourceManager::addMaterialToTrashCollector(ModelObj* model)
