@@ -5,6 +5,7 @@
 #include "UIString.h"
 #include "UISprite.h"
 #include <string>
+#include "plHelper.h"
 
 class UIManager {
 public:
@@ -18,4 +19,9 @@ private:
 	std::vector<UIString> strings;
 	ResourceManager* rm;
 	Graphics* gfx;
+	void init(Graphics*& gfx);
+private://d3dshit
+	ID3D11InputLayout* inputLayout;
+	ID3D11VertexShader* vShader;
+	ID3D11PixelShader* pShader;
 };

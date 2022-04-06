@@ -268,10 +268,10 @@
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="UISprite.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="UIElements.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
