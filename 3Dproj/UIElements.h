@@ -3,11 +3,10 @@
 
 class UIElements {
 public:
-	UIElements();
+	UIElements(vec2 _pos, vec2 _size);
 	virtual ~UIElements();
 	virtual void draw() = 0;
 private:
 	vec2 position;
-	float width;
-	float height;
+	vec2 size;
 };

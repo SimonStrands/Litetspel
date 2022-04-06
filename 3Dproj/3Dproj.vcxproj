@@ -206,7 +206,9 @@
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TileAnimation.cpp" />
     <ClCompile Include="TrashCollector.cpp" />
+    <ClCompile Include="UIElements.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="UISprite.cpp" />
     <ClCompile Include="Vec.cpp" />
     <ClCompile Include="WindowClass.cpp" />
     <ClCompile Include="WindowContainer.cpp" />

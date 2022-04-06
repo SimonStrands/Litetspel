@@ -1,9 +1,12 @@
 #pragma once
-#include "UISymbols.h"
 #include <vector>
+#include "UISymbols.h"
+#include "vec.h"
 class UIString {
 public:
 	std::vector<UISymbols> symbols;
-private:
+	vec2 position;
+
 	void draw();
+private:
 };

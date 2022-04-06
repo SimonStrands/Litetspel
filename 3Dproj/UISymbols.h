@@ -7,6 +7,8 @@ class UISymbols : public UIElements {
 public: 
 	UISymbols();
 	void symbol_to_uv(char symbol);
+
+	void draw() override;
 private:
 	vec2 UV_coords;
 	ID3D11ShaderResourceView* spriteSheet;
