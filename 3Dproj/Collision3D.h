@@ -23,3 +23,4 @@ struct ColCube {
 void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB);
 
 bool collision3D(ColCube objectA, ColCube objectB);
+bool collision3D(DirectX::BoundingBox objectA, DirectX::BoundingBox objectB);

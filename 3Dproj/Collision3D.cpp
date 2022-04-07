@@ -30,3 +30,8 @@ bool collision3D(ColCube objectA, ColCube objectB)
 	};
 	return false;
 }
+
+bool collision3D(DirectX::BoundingBox objectA, DirectX::BoundingBox objectB)
+{
+	return objectA.Intersects(objectB);
+}

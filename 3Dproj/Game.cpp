@@ -201,6 +201,7 @@ void Game::Update()
 	obj[4]->setPos(vec3(obj1BB[1].m128_f32[0], obj1BB[1].m128_f32[1], obj1BB[1].m128_f32[2]));
 	obj[5]->setPos(vec3(obj2BB[0].m128_f32[0], obj2BB[0].m128_f32[1], obj2BB[0].m128_f32[2]));
 	obj[6]->setPos(vec3(obj2BB[1].m128_f32[0], obj2BB[1].m128_f32[1], obj2BB[1].m128_f32[2]));
+
 	if (collision3D(ColCube(obj1BB), ColCube(obj2BB))) {
 		light[0]->getColor() = vec3(1, 0, 0);
 	}
@@ -339,7 +340,7 @@ void Game::setUpObject()
 {
 	////////OBJECTS///////////
 	//cameras
-	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(2.f, 2.0f, 2.0f)));//main
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(5.f, 5.0f, 5.0f)));//main
 	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
 	////
 	//////OBJECTS
