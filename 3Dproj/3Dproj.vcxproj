@@ -167,6 +167,7 @@
     <ClCompile Include="BillBoardManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Collision3D.cpp" />
     <ClCompile Include="Convertions.cpp" />
     <ClCompile Include="CreateBuffer.cpp" />
     <ClCompile Include="D311Helper.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Collision3D.h" />
     <ClInclude Include="Convertions.h" />
     <ClInclude Include="D311Helper.h" />
     <ClInclude Include="debug.h" />

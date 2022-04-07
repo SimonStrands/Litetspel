@@ -21,6 +21,8 @@
 #include "flags.h"
 #include "skybox.h"
 
+#include "Collision3D.h"
+
 //git
 class Game {
 public:

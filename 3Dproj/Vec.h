@@ -56,7 +56,8 @@ struct vec3 {
 	bool operator==(vec3& other);
 	void operator=(vec3 other);
 	void operator=(std::array<float, 3> other);
-	const DirectX::XMVECTOR toXMvector();
+	DirectX::XMVECTOR toXMvector();
+	DirectX::XMFLOAT3 toXMFloat3();
 	float length();
 	std::string to_string() {
 		//return "x: " + std::to_string(x) + " y: " + std::to_string(y) + " z: " + std::to_string(z);

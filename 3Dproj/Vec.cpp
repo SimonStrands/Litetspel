@@ -106,10 +106,15 @@ void vec3::operator=(std::array<float, 3> other)
 	this->z = other[2];
 }
 
-const DirectX::XMVECTOR vec3::toXMvector()
+DirectX::XMVECTOR vec3::toXMvector()
 {
 	DirectX::XMVECTOR a = { x,y,z,1 };
 	return a;
+}
+
+DirectX::XMFLOAT3 vec3::toXMFloat3()
+{
+	return DirectX::XMFLOAT3(x,y,z);
 }
 
 
