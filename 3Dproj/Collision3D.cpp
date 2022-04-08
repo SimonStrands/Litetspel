@@ -4,6 +4,22 @@ void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB)
 {
 }
 
+bool collision3D(ColSphere objectA, ColSphere objectB)
+{
+	return false;
+}
+
+bool collision3D(ColCube objectA, ColSphere objectB)
+{
+	return collision3D(objectB, objectA);
+}
+
+bool collision3D(ColSphere objectA, ColCube objectB)
+{
+	//DO shit
+	return false;
+}
+
 bool collision3D(ColCube objectA, ColCube objectB)
 {
 	if (

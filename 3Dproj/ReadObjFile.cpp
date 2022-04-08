@@ -362,10 +362,10 @@ bool readObjFile(std::vector<MeshObj>& Meshes, std::string fileName, std::vector
 		createMesh(gfx, Meshes, vertecies, indecies, matrial[mesh->mMaterialIndex - 1]);
 	}
 	//read mid width, height, depth
-	vec3 mid = box[0] + (vec3(box[1].x - box[0].x, box[1].y - box[0].y, box[1].z - box[0].z) * 0.5f);
-	vec3 whd = vec3(box[1].x - box[0].x, box[1].y - box[0].y, box[1].z - box[0].z) * 0.5f;
-	box[0] = mid;
-	box[1] = whd;
+	//vec3 mid = box[0] + (vec3(box[1].x - box[0].x, box[1].y - box[0].y, box[1].z - box[0].z) * 0.5f);
+	//vec3 whd = vec3(box[1].x - box[0].x, box[1].y - box[0].y, box[1].z - box[0].z) * 0.5f;
+	//box[0] = mid;
+	//box[1] = whd;
 
 
 	return true;

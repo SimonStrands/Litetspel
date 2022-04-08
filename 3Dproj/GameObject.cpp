@@ -26,27 +26,53 @@ void GameObject::draw(Graphics *&gfx, bool sm)
 
 void GameObject::getBoundingBox(DirectX::XMVECTOR theReturn[])
 {
+
+	DirectX::XMVECTOR datemp[2];
 	//rotations
 	DirectX::XMMATRIX rot(DirectX::XMMatrixRotationRollPitchYaw(this->getRot().x, this->getRot().y, this->getRot().z));
 
-	DirectX::XMVECTOR whd =  { model->getBoundingBox()[1].x ,model->getBoundingBox()[1].y ,model->getBoundingBox()[1].z , 1 };
-	DirectX::XMVECTOR mid = { model->getBoundingBox()[0].x ,model->getBoundingBox()[0].y ,model->getBoundingBox()[0].z , 1 };
-	DirectX::XMVECTOR null = { 0, 0, 0 , 0 };
-	theReturn[0] = DirectX::XMVectorAdd(DirectX::XMVectorAdd(
-		DirectX::XMVector4Transform(
-		DirectX::XMVectorMultiply(whd, this->getScale().toXMvector())
-		, rot), 
-		this->getPos().toXMvector()),mid);
-	theReturn[1] = DirectX::XMVectorSubtract(DirectX::XMVectorAdd(
-		DirectX::XMVector4Transform(
-			DirectX::XMVectorMultiply(DirectX::XMVectorSubtract(null, whd), this->getScale().toXMvector())
-			, rot),
-		this->getPos().toXMvector()), mid);
-	
-	DirectX::XMVECTOR temp = {fmax(theReturn[1].m128_f32[0],theReturn[0].m128_f32[0]),fmax(theReturn[1].m128_f32[1],theReturn[0].m128_f32[1]),fmax(theReturn[1].m128_f32[2],theReturn[0].m128_f32[2]) };
-	DirectX::XMVECTOR temp2 = { std::min(theReturn[1].m128_f32[0],theReturn[0].m128_f32[0]),std::min(theReturn[1].m128_f32[1],theReturn[0].m128_f32[1]),std::min(theReturn[1].m128_f32[2],theReturn[0].m128_f32[2]) };
-	theReturn[0] = temp2;
-	theReturn[1] = temp;
+	vec3 high(model->getBoundingBox()[1].x, model->getBoundingBox()[1].y, model->getBoundingBox()[1].z);
+	vec3 low(model->getBoundingBox()[0].x, model->getBoundingBox()[0].y, model->getBoundingBox()[0].z);
+
+	DirectX::XMMATRIX modelMatrix = (scaleMat * rot * transMat);
+
+	DirectX::XMVECTOR bbPoints[8] = {
+		{high.x,high.y,high.z,1},
+		{high.x,high.y,low.z,1},
+		{high.x,low.y,high.z,1},
+		{high.x,low.y,low.z,1},
+		{low.x,high.y,high.z,1},
+		{low.x,high.y,low.z,1},
+		{low.x,low.y,high.z,1},
+		{low.x,low.y,low.z,1}
+	};
+	bbPoints[0] = DirectX::XMVector4Transform(bbPoints[0], modelMatrix);
+	theReturn[0] = bbPoints[0];
+	theReturn[1] = bbPoints[0];
+
+	for (int i = 1; i < 8; i++) {
+		bbPoints[i] = DirectX::XMVector4Transform(bbPoints[i], modelMatrix);
+		if (bbPoints[i].m128_f32[0] > theReturn[1].m128_f32[0]) {
+			theReturn[1].m128_f32[0] = bbPoints[i].m128_f32[0];
+		}
+		if (bbPoints[i].m128_f32[1] > theReturn[1].m128_f32[1]) {
+			theReturn[1].m128_f32[1] = bbPoints[i].m128_f32[1];
+		}
+		if (bbPoints[i].m128_f32[2] > theReturn[1].m128_f32[2]) {
+			theReturn[1].m128_f32[2] = bbPoints[i].m128_f32[2];
+		}
+
+		if (bbPoints[i].m128_f32[0] < theReturn[0].m128_f32[0]) {
+			theReturn[0].m128_f32[0] = bbPoints[i].m128_f32[0];
+		}
+		if (bbPoints[i].m128_f32[1] < theReturn[0].m128_f32[1]) {
+			theReturn[0].m128_f32[1] = bbPoints[i].m128_f32[1];
+		}
+		if (bbPoints[i].m128_f32[2] < theReturn[0].m128_f32[2]) {
+			theReturn[0].m128_f32[2] = bbPoints[i].m128_f32[2];
+		}
+	}
+
 }
 
 DirectX::BoundingBox GameObject::getDirectXBoundingBoxFromModel()

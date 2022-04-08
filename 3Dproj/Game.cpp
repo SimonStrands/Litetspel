@@ -25,7 +25,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	
 	gfx->takeIM(&this->UIManager);
 	
-	camera = new Camera(gfx, mouse, vec3(-5,0,0), vec3(1,0,0));
+	camera = new Camera(gfx, mouse, vec3(0,0,0), vec3(0,0,0));
 	camera->setData();
 	//gfx->getWindosClass().setMouse(mouse);
 	setUpObject();
@@ -191,23 +191,23 @@ void Game::Update()
 		gfx->getVertexconstbuffer()->view.element = viewMatrix;
 	}
 	obj[0]->setPos(camera->getPos());
-	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y) + vec3(0, 1.57f, 0));
+	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y)); //+ vec3(0, 1.57f, 0));
 
-	DirectX::XMVECTOR obj1BB[2];
-	DirectX::XMVECTOR obj2BB[2];
-	obj[0]->getBoundingBox(obj1BB);
-	obj[2]->getBoundingBox(obj2BB);
-	obj[3]->setPos(vec3(obj1BB[0].m128_f32[0], obj1BB[0].m128_f32[1], obj1BB[0].m128_f32[2]));
-	obj[4]->setPos(vec3(obj1BB[1].m128_f32[0], obj1BB[1].m128_f32[1], obj1BB[1].m128_f32[2]));
-	obj[5]->setPos(vec3(obj2BB[0].m128_f32[0], obj2BB[0].m128_f32[1], obj2BB[0].m128_f32[2]));
-	obj[6]->setPos(vec3(obj2BB[1].m128_f32[0], obj2BB[1].m128_f32[1], obj2BB[1].m128_f32[2]));
-
-	if (collision3D(ColCube(obj1BB), ColCube(obj2BB))) {
-		light[0]->getColor() = vec3(1, 0, 0);
-	}
-	else {
-		light[0]->getColor() = vec3(0, 1, 0);
-	}
+	//DirectX::XMVECTOR obj1BB[2];
+	//DirectX::XMVECTOR obj2BB[2];
+	//obj[0]->getBoundingBox(obj1BB);
+	//obj[2]->getBoundingBox(obj2BB);
+	//obj[3]->setPos(vec3(obj1BB[0].m128_f32[0], obj1BB[0].m128_f32[1], obj1BB[0].m128_f32[2]));
+	//obj[4]->setPos(vec3(obj1BB[1].m128_f32[0], obj1BB[1].m128_f32[1], obj1BB[1].m128_f32[2]));
+	//obj[5]->setPos(vec3(obj2BB[0].m128_f32[0], obj2BB[0].m128_f32[1], obj2BB[0].m128_f32[2]));
+	//obj[6]->setPos(vec3(obj2BB[1].m128_f32[0], obj2BB[1].m128_f32[1], obj2BB[1].m128_f32[2]));
+	//
+	//if (collision3D(ColCube(obj1BB), ColCube(obj2BB))) {
+	//	light[0]->getColor() = vec3(1, 0, 0);
+	//}
+	//else {
+	//	light[0]->getColor() = vec3(0, 1, 0);
+	//}
 
 	for (int i = 0; i < billboardGroups.size(); i++) {
 		billboardGroups[i]->update((float)dt.dt(), gfx);
@@ -352,11 +352,14 @@ void Game::setUpObject()
 	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
 	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
 
+	obj.push_back(new GameObject(rm->get_Models("Shield.obj", gfx), gfx, vec3(-1,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("quadYoda.obj", gfx), gfx, vec3(10,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+
 	float gw = 10;
 	float gn = 8;
 	for (int x = 0; x < gn; x++) {
 		for (int y = 0; y < gn; y++) {
-			stataicObj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(10, 10, 10)));
+			//stataicObj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(10, 10, 10)));
 			//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(1, 1, 1)));
 		}
 	}
@@ -370,13 +373,13 @@ void Game::setUpLights()
 
 	//create the lights with 
 	//light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f), 100, 100);
-	light[0] = new PointLight(vec3(0, 8, 8), 200, vec3(1,0,0));
+	light[0] = new PointLight(vec3(1, 1, 1), 200, vec3(1,1,1));
 	//light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
 	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
 	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
 
 	//set color for lights (deafault white)
-	light[0]->getColor() = vec3(1, 0, 1);
+	light[0]->getColor() = vec3(1, 1, 1);
 	//light[1]->getColor() = vec3(1, 0, 1);
 
 	//say to graphics/shaders how many lights we have

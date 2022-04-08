@@ -51,7 +51,7 @@ private:
 	vec3 rPoint;
 	ModelObj* model;
 	ID3D11Buffer* Vg_pConstantBuffer;
-private:
+protected:
 	//test to see if we can make it faster
 	DirectX::XMMATRIX scaleMat;
 	DirectX::XMMATRIX transMat;
