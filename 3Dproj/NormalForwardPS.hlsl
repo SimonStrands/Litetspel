@@ -2,19 +2,19 @@
 
 struct PixelShaderInput
 {
-	float4 position : SV_POSITION;
-	float2 uv : UV;
-	float3 normal : NORMAL;
-	float3 tangent : TANGENT;
-	float3 bitangent : BITANGENT;
-	float4 fragpos: FRAG_POS;
+    float4 position : SV_POSITION;
+    float2 uv : UV;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+    float3 bitangent : BITANGENT;
+    float4 fragpos : FRAG_POS;
 };
 
 cbuffer CBuf
 {
-	float4 kd;
-	float4 ks;
-	float4 ka;
+    float4 kd;
+    float4 ks;
+    float4 ka;
 };
 
 Texture2D diffuseTex : register(t0); // diffuse base color
@@ -45,8 +45,9 @@ float4 main(PixelShaderInput input) : SV_TARGET
         float dist = length(lightPos[i].xyz - input.fragpos.xyz);
         //ambient
         float3 ambient_light = ka.xyz * lightColor[i].xyz;
-        static const float bias = 0.00001f; 
+        static const float bias = 0.00001f;
         float attenuation = 1;
+        
         if (lightPos[i].w == 2)
         {
             attenuation = Attenuate(1, 1 / lightColor[i].w, 0.001f, dist);
@@ -55,15 +56,16 @@ float4 main(PixelShaderInput input) : SV_TARGET
             SM.r > shadowMapCoords.z - bias &&
             shadowMapCoords.z <= 1.0f && //E
             shadowMapCoords.x < 1 && shadowMapCoords.x > 0 &&
-            shadowMapCoords.y < 1 && shadowMapCoords.y > 0
+            shadowMapCoords.y < 1 && shadowMapCoords.y > 0 &&
+            dot(input.normal, lightDir) > -0.2f
             )
         {
-
             float3 viewDir = normalize(cameraPos.xyz - input.fragpos.xyz);
+            
             //defuse
             float3 defuse_light;
             float ammount_diffuse = max(dot(input.normal.xyz, lightDir), 0.0f);
-            defuse_light = ammount_diffuse * color.xyz * lightColor[i].xyz;
+            defuse_light = ammount_diffuse * kd.xyz * lightColor[i].xyz;
 
             //specular
             float3 reflectDir = reflect(-lightDir, input.normal.xyz);
@@ -76,10 +78,10 @@ float4 main(PixelShaderInput input) : SV_TARGET
         else
         {
             //we are in shadow
-            FinalPixel += float4((ka.xyz * color.xyz), 0);
+            FinalPixel += float4((ka.xyz), 0);
         }
     }
     //return float4(FinalPixel.xyz, 1);
-    return float4(FinalPixel.xyz, color.a);
+    return float4(FinalPixel.xyz * color.xyz, color.a);
 
 }
