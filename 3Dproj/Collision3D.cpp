@@ -2,6 +2,15 @@
 
 void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB)
 {
+	DirectX::XMVECTOR a[2];
+	DirectX::XMVECTOR b[2];
+	objectA->getBoundingBox(a);
+	objectB->getBoundingBox(b);
+	if (collision3D(ColCube(a), ColCube(b))) 
+	{
+		objectA->movePos(objectA->getlastPosition() - objectA->getPos());
+		objectB->movePos(objectB->getlastPosition() - objectB->getPos());
+	}
 }
 
 bool collision3D(ColSphere objectA, ColSphere objectB)
@@ -26,30 +35,41 @@ bool collision3D(ColSphere objectA, ColCube objectB)
 
 bool collision3D(ColCube objectA, ColCube objectB)
 {
+	//check if one side is inside
 	if (
 		//check x
 		(
 			objectA.lowPoint.x < objectB.highPoint.x &&
 			objectA.highPoint.x > objectB.lowPoint.x 
+			//||
+			//objectA.lowPoint.x < objectB.lowPoint.x &&
+			//objectA.highPoint.x > objectB.highPoint.x
 		) &&
 		//check y
 		(
 			objectA.lowPoint.y < objectB.highPoint.y &&
-			objectA.highPoint.y > objectB.lowPoint.y
+			objectA.highPoint.y > objectB.lowPoint.y 
+			//||
+			//objectA.lowPoint.y < objectB.lowPoint.y &&
+			//objectA.highPoint.y > objectB.highPoint.y
 		) 
 		&&
 		//check z
 		(
 			objectA.lowPoint.z < objectB.highPoint.z &&
-			objectA.highPoint.z > objectB.lowPoint.z
+			objectA.highPoint.z > objectB.lowPoint.z 
+			//||
+			//objectA.lowPoint.z < objectB.lowPoint.z &&
+			//objectA.highPoint.z > objectB.highPoint.z
 		)
 		)
 	{
 		std::cout << "hit " << std::endl;
 		return true;
-	};
+	}
 	return false;
 }
+
 
 bool collision3D(DirectX::BoundingBox objectA, DirectX::BoundingBox objectB)
 {

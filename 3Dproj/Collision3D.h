@@ -28,6 +28,7 @@ struct ColSphere {
 	float size;
 };
 
+
 void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB);
 
 //two spheres

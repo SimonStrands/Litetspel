@@ -56,5 +56,6 @@ protected:
 	DirectX::XMMATRIX scaleMat;
 	DirectX::XMMATRIX transMat;
 	DirectX::XMMATRIX pointMat;
+	vec3 _lastPosition;
 };
 

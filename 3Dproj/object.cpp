@@ -106,6 +106,7 @@ void object::movePoint(vec3 point)
 
 void object::movePos(vec3 pos)
 {
+    _lastPosition = this->pos;
     this->pos = this->pos + pos;
 }
 

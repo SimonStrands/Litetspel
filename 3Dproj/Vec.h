@@ -42,6 +42,11 @@ struct vec3 {
 		this->y = 0;
 		this->z = 0;
 	}
+	vec3(DirectX::XMVECTOR theVec) {
+		this->x = theVec.m128_f32[0];
+		this->y = theVec.m128_f32[1];
+		this->z = theVec.m128_f32[2];
+	}
 
 	vec3 Normalize();
 	vec3 X(const vec3& other);

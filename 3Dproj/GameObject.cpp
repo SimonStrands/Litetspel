@@ -23,11 +23,14 @@ void GameObject::draw(Graphics *&gfx, bool sm)
 	model->draw(gfx, sm);
 }
 
+vec3 GameObject::getlastPosition()
+{
+	return this->_lastPosition;
+}
+
 
 void GameObject::getBoundingBox(DirectX::XMVECTOR theReturn[])
 {
-
-	DirectX::XMVECTOR datemp[2];
 	//rotations
 	DirectX::XMMATRIX rot(DirectX::XMMatrixRotationRollPitchYaw(this->getRot().x, this->getRot().y, this->getRot().z));
 
@@ -77,6 +80,7 @@ void GameObject::getBoundingBox(DirectX::XMVECTOR theReturn[])
 
 DirectX::BoundingBox GameObject::getDirectXBoundingBoxFromModel()
 {
+	//TODO : delete datemp
 	DirectX::XMVECTOR datemp[2];
 	//rotations
 	DirectX::XMMATRIX rot(DirectX::XMMatrixRotationRollPitchYaw(this->getRot().x, this->getRot().y, this->getRot().z));

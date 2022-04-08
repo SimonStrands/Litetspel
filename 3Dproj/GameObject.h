@@ -13,6 +13,8 @@ public:
 	
 	void draw(Graphics*& gfx, bool sm = false);
 
+	vec3 getlastPosition();
+
 	//update vertexConstBuffer on object
 	void Updateshaders(Graphics*& gfx, bool vertex = true);
 
