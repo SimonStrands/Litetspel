@@ -27,29 +27,15 @@ struct ColSphere {
 	vec3 position;
 	float size;
 };
-struct ColCylinder {
-	//can only be standing up
-	ColCylinder(vec3 position, float height, float size) {
-		this->position = position;
-		this->height = height;
-		this->size = size;
-	};
-	vec3 position;
-	float height;
-	float size;
-};
 
 void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB);
 
-
-
 //two spheres
 bool collision3D(ColSphere objectA, ColSphere objectB);
-
-//sphere and a cube
-bool collision3D(ColCube objectA, ColSphere objectB);
 bool collision3D(ColSphere objectA, ColCube objectB);
 
-//collision with two aligned axis cubes
+//sphere and a cube
 bool collision3D(ColCube objectA, ColCube objectB);
+
+//collision with two aligned axis cubes
 bool collision3D(DirectX::BoundingBox objectA, DirectX::BoundingBox objectB);

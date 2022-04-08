@@ -82,6 +82,21 @@ vec3 vec3::operator-(vec3 other)
 	return vec3(this->x - other.x, this->y - other.y, this->z - other.z);
 }
 
+float vec3::getWithNumber(int i)
+{
+	switch (i)
+	{
+	case 0:
+		return x;
+	case 1:
+		return y;
+	case 2:
+		return z;
+	default:
+		return x;
+	}
+}
+
 vec3 vec3::mirror()
 {
 	return vec3(-this->x,-this->y,-this->z);

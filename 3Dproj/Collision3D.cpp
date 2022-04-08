@@ -6,18 +6,22 @@ void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB)
 
 bool collision3D(ColSphere objectA, ColSphere objectB)
 {
-	return false;
-}
-
-bool collision3D(ColCube objectA, ColSphere objectB)
-{
-	return collision3D(objectB, objectA);
+	return (objectA.position - objectB.position).length() < objectA.size + objectB.size;
 }
 
 bool collision3D(ColSphere objectA, ColCube objectB)
 {
-	//DO shit
-	return false;
+	float sqDist = 0.0f;
+	for (int i = 0; i < 3; i++) {
+		float v = objectA.position.getWithNumber(i);
+		if (v < objectB.lowPoint.getWithNumber(i)) {
+			sqDist += (objectB.lowPoint.getWithNumber(i) - v) * (objectB.lowPoint.getWithNumber(i) - v);
+		}
+		if (v > objectB.highPoint.getWithNumber(i)) {
+			sqDist += (v - objectB.highPoint.getWithNumber(i)) * (v - objectB.highPoint.getWithNumber(i));
+		}
+	}
+	return sqDist <= objectA.size * objectA.size;
 }
 
 bool collision3D(ColCube objectA, ColCube objectB)
