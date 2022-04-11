@@ -103,6 +103,12 @@
     <Filter Include="Source Files\WindowWithMouse">
       <UniqueIdentifier>{1de9154b-81a4-43ad-bf25-f12375190e04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Sounds">
+      <UniqueIdentifier>{e5167efb-ea4e-4dbb-a749-13fa9a6792d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sounds">
+      <UniqueIdentifier>{780dd629-f461-482b-a70f-e287133558a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -186,9 +192,6 @@
     <ClCompile Include="ShadowMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AnimationModel.cpp">
       <Filter>Source Files\ForSimon\Animation &amp; other</Filter>
     </ClCompile>
@@ -201,16 +204,7 @@
     <ClCompile Include="BillBoardManager.cpp">
       <Filter>Source Files\Game\Objects\Paricle</Filter>
     </ClCompile>
-    <ClCompile Include="Random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TrashCollector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="QuadTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DeferredRendering.cpp">
@@ -242,6 +236,24 @@
     </ClCompile>
     <ClCompile Include="RenderWindow.cpp">
       <Filter>Source Files\WindowWithMouse</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Graphic\mesh loading</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Source Files\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="TrashCollector.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,9 +371,6 @@
     <ClInclude Include="AnimationModel.h">
       <Filter>Header Files\Graphic\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Convertions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Quaternion.h">
       <Filter>Header Files\Other</Filter>
     </ClInclude>
@@ -400,6 +409,15 @@
     </ClInclude>
     <ClInclude Include="WindowContainer.h">
       <Filter>Source Files\WindowWithMouse</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Header Files\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Convertions.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox.h">
+      <Filter>Header Files\Graphic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -470,6 +488,12 @@
     </FxCompile>
     <FxCompile Include="NormalForwardPS.hlsl">
       <Filter>Resource Files\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxPS.hlsl">
+      <Filter>Resource Files\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyBoxVS.hlsl">
+      <Filter>Resource Files\Shaders\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

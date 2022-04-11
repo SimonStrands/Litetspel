@@ -15,10 +15,11 @@
 #include "DynamicCubeEnviroment.h"
 #include "QuadTree.h"
 #include "TrashCollector.h"
+#include "SoundManager.h"
 
 #include "DebugCamera.h"
 #include "flags.h"
-#include "mouse.h"
+#include "skybox.h"
 
 //git
 class Game {
@@ -47,6 +48,8 @@ private:
 	Camera* camera;
 	ShadowMap* shadowMap;
 	QuadTree* Qtree;
+	SoundManager soundManager;
+	SkyBox* Space;
 	void setUpObject();
 	void setUpLights();
 	void setUpParticles();

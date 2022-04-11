@@ -7,7 +7,7 @@
 
 //whatTypeOfLight so I don't ahve to do a dynamic_cast
 enum wTofL {
-	SPOT, DIR
+	SPOT, DIR, PLIGHT
 };
 
 class Light {
@@ -17,9 +17,18 @@ public:
 	vec3& getRotation();
 	vec3& getPos();
 	vec3& getColor();
-private:
+	int getType() const;
+	DirectX::XMMATRIX getLightViewProj() const;
+	float getFallOff()const;
+	//get light and view matrix from light
+	DirectX::XMMATRIX getLightProj() const;
+protected:
+	DirectX::XMMATRIX Projection;
+	wTofL flag;
 	vec3 color;
 	vec3 pos;
+	vec3 rot;
+	float fallOff;
 };
 
 
@@ -32,18 +41,18 @@ public:
 	void addRot(vec3 rot);
 	//get view matrix from light
 	DirectX::XMMATRIX getLightView();
-	//get light and view matrix from light
-	DirectX::XMMATRIX getLightViewProj();
 	//what type of light if its spotlight or directional light
 	const wTofL whatOfLight();
-protected:
-	wTofL flag;
-	DirectX::XMMATRIX Projection;
 private:
-	vec3 rot;
+	
 };
 
 class DirLight : public SpotLight {
 public:
 	DirLight(vec3 pos, vec3 rot = vec3(0, 0, 1), float W = 50, float H = 50);
+};
+
+class PointLight : public Light {
+public:
+	PointLight(vec3 pos, float falloff, vec3 Color = vec3(1, 1, 1));
 };
