@@ -38,7 +38,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	}
 	
 	setUpParticles();
-	
+	UIManager.takeObject(obj[3]);
 	/*IMGUI*/
 	for (int i = 0; i < nrOfLight; i++) {
 		UIManager.takeLight(light[i]);
@@ -205,31 +205,9 @@ void Game::Update()
 	gfx->Update((float)dt.dt(), camera->getPos());
 	Space->update(camera->getPos());
 
-	//if (getkey('F')) {
-	//	obj[3]->movePos(vec3(0, -1, 0) * dt.dt());
-	//}
-	//collisionWithBlocking(obj[2], obj[3]);
-	DirectX::XMVECTOR obj1BB[2];
-	DirectX::XMVECTOR obj2BB[2];
-	obj[0]->getBoundingBox(obj1BB);
-	obj[2]->getBoundingBox(obj2BB);
 
-	if (getkey('F')) {
-		obj[3]->movePos(vec3(0, -1, 0) * dt.dt());
-	}
-
-	collisionWithBlocking(obj[3], obj[2]);
-
-	//obj[3]->setPos(vec3(obj1BB[0].m128_f32[0], obj1BB[0].m128_f32[1], obj1BB[0].m128_f32[2]));
-	//obj[4]->setPos(vec3(obj1BB[1].m128_f32[0], obj1BB[1].m128_f32[1], obj1BB[1].m128_f32[2]));
-	//obj[5]->setPos(vec3(obj2BB[0].m128_f32[0], obj2BB[0].m128_f32[1], obj2BB[0].m128_f32[2]));
-	//obj[6]->setPos(vec3(obj2BB[1].m128_f32[0], obj2BB[1].m128_f32[1], obj2BB[1].m128_f32[2]));
-	
-	if (collision3D(ColCube(obj1BB), ColCube(obj2BB))) {
-		light[0]->getColor() = vec3(1, 0, 0);
-	}
-	else {
-		light[0]->getColor() = vec3(0, 1, 0);
+	for (int i = 0; i < 4; i++) {
+		obj[i]->update();
 	}
 
 #pragma region camera_settings
@@ -358,10 +336,10 @@ void Game::setUpObject()
 	obj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(0, -5, 0), vec3(0, 0, 1.57f), vec3(100, 100, 100)));
 	obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 
-	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
-	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
-	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
-	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, vec3(5,0,0), vec3(0.f, 0.f, 0.f), vec3(5,5,5)));
+	//obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	//obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	//obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
 
 	obj.push_back(new GameObject(rm->get_Models("Shield.obj", gfx), gfx, vec3(-1,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
 	obj.push_back(new GameObject(rm->get_Models("quadYoda.obj", gfx), gfx, vec3(10,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));

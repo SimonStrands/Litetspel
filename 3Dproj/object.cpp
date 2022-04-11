@@ -106,7 +106,6 @@ void object::movePoint(vec3 point)
 
 void object::movePos(vec3 pos)
 {
-    _lastPosition = this->pos;
     this->pos = this->pos + pos;
 }
 
@@ -118,6 +117,11 @@ void object::addRot(vec3 rot)
 void object::addScale(vec3 scale)
 {
     this->scale = this->scale + scale;
+}
+
+void object::update()
+{
+    this->_lastPosition = this->pos;
 }
 
 ID3D11Buffer*& object::getVertexConstBuffer()

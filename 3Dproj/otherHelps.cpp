@@ -37,6 +37,13 @@ void swap(std::vector<vertex>& a)
 	a[a.size() - 2] = temp;
 }
 
+void swap(float& a, float& b)
+{
+	float temp = a;
+	a = b;
+	b = temp;
+}
+
 //only searches in Textures
 FileInfo seeIfFileExist(std::string fileName)
 {

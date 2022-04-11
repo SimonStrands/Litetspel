@@ -2,6 +2,8 @@
 #include "Vec.h"
 #include "GameObject.h"
 #include <DirectXCollision.h>
+#include "otherHelps.h"
+#include "rect.h"
 
 struct ColCube {
 	ColCube(vec3 highPoint, vec3 lowPoint) {
@@ -28,8 +30,16 @@ struct ColSphere {
 	float size;
 };
 
+ 
 
-void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB);
+bool RayRect(vec3 &rayOrigin, vec3 rayDir, ColCube &cube, vec3 &cp, vec3 &cn, float &t);
+bool RectRect(GameObject*& objectA, ColCube& in, ColCube& target, vec3& cp, vec3& cn, float& contact_t, float elapsed_t);
+
+//only moves object A!!!
+void moveObject(GameObject*& objectA, GameObject*& objectB, ColCube colCubeA, ColCube colCubeB);
+//void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB);
+void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB, float dt);
+
 
 //two spheres
 bool collision3D(ColSphere objectA, ColSphere objectB);

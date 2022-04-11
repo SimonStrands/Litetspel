@@ -261,6 +261,12 @@
     <ClCompile Include="Collision3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D311Helper.h">
@@ -427,6 +433,15 @@
     </ClInclude>
     <ClInclude Include="Collision3D.h">
       <Filter>Header Files\Fysik</Filter>
+    </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>Header Files\Fysik</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
