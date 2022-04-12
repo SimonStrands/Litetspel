@@ -42,6 +42,11 @@ struct vec3 {
 		this->y = 0;
 		this->z = 0;
 	}
+	vec3(DirectX::XMVECTOR theVec) {
+		this->x = theVec.m128_f32[0];
+		this->y = theVec.m128_f32[1];
+		this->z = theVec.m128_f32[2];
+	}
 
 	vec3 Normalize();
 	vec3 X(const vec3& other);
@@ -52,11 +57,14 @@ struct vec3 {
 	vec3 operator/(vec3 other);
 	vec3 operator+(vec3 other);
 	vec3 operator-(vec3 other);
+	//0 = x, 1 = y, 2 = z
+	float getWithNumber(int i);
 	vec3 mirror();
 	bool operator==(vec3& other);
 	void operator=(vec3 other);
 	void operator=(std::array<float, 3> other);
-	const DirectX::XMVECTOR toXMvector();
+	DirectX::XMVECTOR toXMvector();
+	DirectX::XMFLOAT3 toXMFloat3();
 	float length();
 	std::string to_string() {
 		//return "x: " + std::to_string(x) + " y: " + std::to_string(y) + " z: " + std::to_string(z);

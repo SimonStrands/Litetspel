@@ -21,6 +21,8 @@
 #include "flags.h"
 #include "skybox.h"
 
+#include "Collision3D.h"
+
 //git
 class Game {
 public:
@@ -31,7 +33,6 @@ public:
 	void ForwardDraw();
 	void DrawAllShadowObject();//without any otherShaders
 	void updateShaders(bool vs = true, bool ps = true);
-	bool processMessage();
 private:
 	MSG msg = {};
 	Graphics *gfx;

@@ -1,4 +1,5 @@
 #include "WindowContainer.h"
+#include "imgui_impl_win32.h"
 
 WindowContainer::WindowContainer()
 {
@@ -33,6 +34,10 @@ WindowContainer::~WindowContainer()
 
 LRESULT WindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (!mouse->getMouseActive() && ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
+	{
+		return true;
+	}
 	switch (uMsg)
 	{
 	case WM_KEYUP:

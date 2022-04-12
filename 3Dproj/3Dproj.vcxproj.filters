@@ -109,6 +109,9 @@
     <Filter Include="Source Files\Sounds">
       <UniqueIdentifier>{780dd629-f461-482b-a70f-e287133558a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Fysik">
+      <UniqueIdentifier>{287b5de3-3faa-4165-b689-8a588ea2b955}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -253,6 +256,15 @@
       <Filter>Source Files\Other</Filter>
     </ClCompile>
     <ClCompile Include="skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -418,6 +430,18 @@
     </ClInclude>
     <ClInclude Include="skybox.h">
       <Filter>Header Files\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision3D.h">
+      <Filter>Header Files\Fysik</Filter>
+    </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>Header Files\Fysik</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

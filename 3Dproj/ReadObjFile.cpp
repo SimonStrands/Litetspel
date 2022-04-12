@@ -192,7 +192,7 @@ bool getMatrialFromFile(std::string fileName, std::vector<Material*>& matrial, G
 		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
 			aiString Path;
 			if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-				std::string thePath(Path.data);
+				std::string thePath = getPathfrom(Path.data, "Textures");
 				matrial[i]->loadTexture(thePath, gfx, 0, def);
 			}
 		}
@@ -276,23 +276,23 @@ void readFace(std::string readWord, std::vector<vertex> &vertecies, std::vector<
 void getLowest(vec3 box[2], float vPos[3])
 {
 	//get the lowest
-	if (box[0].x < vPos[0]) {
+	if (vPos[0] < box[0].x) {
 		box[0].x = vPos[0];
 	}
-	if (box[0].y < vPos[1]) {
+	if (vPos[1] < box[0].y) {
 		box[0].y = vPos[1];
 	}
-	if (box[0].z < vPos[2]) {
+	if (vPos[2] < box[0].z) {
 		box[0].z = vPos[2];
 	}
 	//get highest
-	if (box[1].x > vPos[0]) {
+	if (vPos[0] > box[1].x) {
 		box[1].x = vPos[0];
 	}
-	if (box[1].y > vPos[1]) {
+	if (vPos[1] > box[1].y) {
 		box[1].y = vPos[1];
 	}
-	if (box[1].z > vPos[2]) {
+	if (vPos[2] > box[1].z) {
 		box[1].z = vPos[2];
 	}
 }
@@ -330,6 +330,8 @@ bool readObjFile(std::vector<MeshObj>& Meshes, std::string fileName, std::vector
 			v.pos[1] = mesh->mVertices[i].y;
 			v.pos[2] = mesh->mVertices[i].z;
 			getLowest(box, v.pos);
+			//std::cout << "small box:" << box[0].x << box[0].y << box[0].z << std::endl;
+			//std::cout << "big box:" << box[1].x << box[1].y << box[1].z << std::endl;
 
 			v.norm[0] = mesh->mNormals[i].x;
 			v.norm[1] = mesh->mNormals[i].y;
@@ -359,6 +361,12 @@ bool readObjFile(std::vector<MeshObj>& Meshes, std::string fileName, std::vector
 		}
 		createMesh(gfx, Meshes, vertecies, indecies, matrial[mesh->mMaterialIndex - 1]);
 	}
+	//read mid width, height, depth
+	//vec3 mid = box[0] + (vec3(box[1].x - box[0].x, box[1].y - box[0].y, box[1].z - box[0].z) * 0.5f);
+	//vec3 whd = vec3(box[1].x - box[0].x, box[1].y - box[0].y, box[1].z - box[0].z) * 0.5f;
+	//box[0] = mid;
+	//box[1] = whd;
+
 
 	return true;
 }
