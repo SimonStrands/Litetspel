@@ -167,6 +167,7 @@
     <ClCompile Include="BillBoardManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Collision3D.cpp" />
     <ClCompile Include="Convertions.cpp" />
     <ClCompile Include="CreateBuffer.cpp" />
     <ClCompile Include="D311Helper.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="DynamicCubeEnviroment.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imguiManager.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="otherHelps.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="plHelper.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="Random.cpp" />
@@ -218,6 +221,7 @@
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Collision3D.h" />
     <ClInclude Include="Convertions.h" />
     <ClInclude Include="D311Helper.h" />
     <ClInclude Include="debug.h" />
@@ -227,10 +231,13 @@
     <ClInclude Include="flags.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="CreateBuffer.h" />
+    <ClInclude Include="rect.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="WindowContainer.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />

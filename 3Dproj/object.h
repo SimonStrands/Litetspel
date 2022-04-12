@@ -28,6 +28,7 @@ public:
 	//current rotation + rot
 	void addRot(vec3 rot);
 	void addScale(vec3 scale);
+	void update();
 
 	ID3D11Buffer*& getVertexConstBuffer();
 	void getKdKa(float kd[4], float ka[4]);
@@ -51,10 +52,11 @@ private:
 	vec3 rPoint;
 	ModelObj* model;
 	ID3D11Buffer* Vg_pConstantBuffer;
-private:
+protected:
 	//test to see if we can make it faster
 	DirectX::XMMATRIX scaleMat;
 	DirectX::XMMATRIX transMat;
 	DirectX::XMMATRIX pointMat;
+	vec3 _lastPosition;
 };
 

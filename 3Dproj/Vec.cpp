@@ -82,6 +82,21 @@ vec3 vec3::operator-(vec3 other)
 	return vec3(this->x - other.x, this->y - other.y, this->z - other.z);
 }
 
+float vec3::getWithNumber(int i)
+{
+	switch (i)
+	{
+	case 0:
+		return x;
+	case 1:
+		return y;
+	case 2:
+		return z;
+	default:
+		return x;
+	}
+}
+
 vec3 vec3::mirror()
 {
 	return vec3(-this->x,-this->y,-this->z);
@@ -106,10 +121,15 @@ void vec3::operator=(std::array<float, 3> other)
 	this->z = other[2];
 }
 
-const DirectX::XMVECTOR vec3::toXMvector()
+DirectX::XMVECTOR vec3::toXMvector()
 {
 	DirectX::XMVECTOR a = { x,y,z,1 };
 	return a;
+}
+
+DirectX::XMFLOAT3 vec3::toXMFloat3()
+{
+	return DirectX::XMFLOAT3(x,y,z);
 }
 
 

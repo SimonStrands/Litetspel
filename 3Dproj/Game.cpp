@@ -25,7 +25,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	
 	gfx->takeIM(&this->UIManager);
 	
-	camera = new Camera(gfx, mouse, vec3(-5,0,0), vec3(1,0,0));
+	camera = new Camera(gfx, mouse, vec3(0,0,0), vec3(0,0,0));
 	camera->setData();
 	//gfx->getWindosClass().setMouse(mouse);
 	setUpObject();
@@ -38,7 +38,7 @@ Game::Game(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWS
 	}
 	
 	setUpParticles();
-	
+	UIManager.takeObject(obj[3]);
 	/*IMGUI*/
 	for (int i = 0; i < nrOfLight; i++) {
 		UIManager.takeLight(light[i]);
@@ -106,78 +106,77 @@ void Game::run()
 	static bool once = false;
 	while (msg.message != WM_QUIT && gfx->getWindosClass().ProcessMessages())
 	{
-		
-		if (keyboard->isKeyPressed('P')) {
-			gfx->getWindosClass().HideCoursor();
-		}
-		else if (keyboard->isKeyPressed('O')) {
-			gfx->getWindosClass().ShowCoursor();
-		}
-		/*Read Mouse*/
-		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
-			mouseEvent e = mouse->ReadEvent();
-			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
-				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
+		if (dt.dt() < 0.2f) {
+			if (keyboard->isKeyPressed('P')) {
+				gfx->getWindosClass().HideCoursor();
 			}
-			if (e.getType() == mouseEvent::EventType::LPress) {
-				//soundManager.playSound("ah1", obj[2]->getPos());
+			else if (keyboard->isKeyPressed('O')) {
+				gfx->getWindosClass().ShowCoursor();
 			}
+			/*Read Mouse*/
+			while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
+				mouseEvent e = mouse->ReadEvent();
+				if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
+					camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
+				}
+				if (e.getType() == mouseEvent::EventType::LPress) {
+					//soundManager.playSound("ah1", obj[2]->getPos());
+				}
+			}
+			//f (keyboard->isKeyPressed('W')) {
+			//	std::cout << "penis" << std::endl;
+			//	camera->movePos(vec3(0, 0, 100 * dt.dt()));
+			//
+
+			gfx->clearScreen();
+			gfx->setTransparant(false);
+			//for shadow
+			//måste uppdatera detta så inte hela object uppdateras när bara skugga ska
+			shadowMap->setUpdateShadow();
+			vec3 camLP = camera->getPos();
+			vec3 camLR = camera->getRot();
+			for (int i = 0; i < nrOfLight; i++) {
+				//set cam position to lightposition
+				camera->setPosition(light[i]->getPos());
+				camera->setRotation(light[i]->getRotation());
+				shadowMap->inUpdateShadow(i);
+				updateShaders(true, false);
+				DrawAllShadowObject();
+			}
+			//set cam position so its the real cam
+			camera->setPosition(camLP);
+			camera->setRotation(camLR);
+			gfx->setProjection(0);//last can be dir light
+			gfx->RsetViewPort();
+
+			Update();
+			if (def_rend) {
+				//deferred rendering
+				defRend->BindFirstPass();
+				this->DrawToBuffer();
+				defRend->BindSecondPass(shadowMap->GetshadowResV());
+			}
+
+			gfx->setRenderTarget();
+			gfx->setTransparant(true);
+			if (!def_rend) {
+				//if deferred rendfering 
+				gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
+				this->DrawToBuffer();
+			}
+			this->ForwardDraw();
+			gfx->present(this->lightNr);
+
+			//once = false;
 		}
-		//f (keyboard->isKeyPressed('W')) {
-		//	std::cout << "penis" << std::endl;
-		//	camera->movePos(vec3(0, 0, 100 * dt.dt()));
-		//
-		
-		gfx->clearScreen();
-		gfx->setTransparant(false);
-		//for shadow
-		//måste uppdatera detta så inte hela object uppdateras när bara skugga ska
-		shadowMap->setUpdateShadow();
-		vec3 camLP = camera->getPos();
-		vec3 camLR = camera->getRot();
-		for (int i = 0; i < nrOfLight; i++) {
-			//set cam position to lightposition
-			camera->setPosition(light[i]->getPos());
-			camera->setRotation(light[i]->getRotation());
-			shadowMap->inUpdateShadow(i);
-			updateShaders(true, false);
-			DrawAllShadowObject();
-		}
-		//set cam position so its the real cam
-		camera->setPosition(camLP);
-		camera->setRotation(camLR);
-		gfx->setProjection(0);//last can be dir light
-		gfx->RsetViewPort();
-		
-		
-		Update();
-		updateShaders();
-		if (def_rend){
-			//deferred rendering
-			defRend->BindFirstPass();
-			this->DrawToBuffer();
-			defRend->BindSecondPass(shadowMap->GetshadowResV());
-		}
-		
-		gfx->setRenderTarget();
-		gfx->setTransparant(true);
-		if (!def_rend) {
-			//if deferred rendfering 
-			gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
-			this->DrawToBuffer();
-		}
-		this->ForwardDraw();
-		gfx->present(this->lightNr);
-	
-		//once = false;
+		dt.restartClock();
 	}
 	printf("quit"); 
 }
 
 void Game::Update()
 {
-	dt.restartClock();
-	
+	/*Move things*/
 	camera->updateCamera((float)dt.dt());
 	if (getkey('N')) {
 		DirectX::XMMATRIX viewMatrix = DirectX::XMMATRIX(
@@ -190,8 +189,18 @@ void Game::Update()
 		YRotation(viewMatrix, obj[1]->getRot().y);
 		gfx->getVertexconstbuffer()->view.element = viewMatrix;
 	}
+	obj[3]->movePos(vec3(0, -10 * dt.dt(), 0));
 	obj[0]->setPos(camera->getPos());
-	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y) + vec3(0, 1.57f, 0));
+	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y)); //+ vec3(0, 1.57f, 0));
+
+	DirectX::XMVECTOR aobb[2];
+	DirectX::XMVECTOR aobb2[2];
+	obj[0]->getBoundingBox(aobb);
+	obj[3]->getBoundingBox(aobb2);
+	obj[5]->setPos(vec3(aobb[0].m128_f32[0], aobb[0].m128_f32[1], aobb[0].m128_f32[2]));
+	obj[6]->setPos(vec3(aobb[1].m128_f32[0], aobb[1].m128_f32[1], aobb[1].m128_f32[2]));
+	obj[7]->setPos(vec3(aobb2[0].m128_f32[0], aobb2[0].m128_f32[1], aobb2[0].m128_f32[2]));
+	obj[8]->setPos(vec3(aobb2[1].m128_f32[0], aobb2[1].m128_f32[1], aobb2[1].m128_f32[2]));
 
 	for (int i = 0; i < billboardGroups.size(); i++) {
 		billboardGroups[i]->update((float)dt.dt(), gfx);
@@ -201,9 +210,20 @@ void Game::Update()
 		LightVisualizers[i]->setRot(vec3(0 , light[i]->getRotation().x, -light[i]->getRotation().y) + vec3(0,1.57f,0));
 	}
 	camera->calcFURVectors();
+	Space->update(camera->getPos());
+
+	/*update vertex*/
+	updateShaders();
+
+	/*Collision checking*/
+	collisionWithBlocking(obj[3], obj[2], dt.dt());
+
+	/*update things*/
 	soundManager.update(camera->getPos(), camera->getForwardVec());
 	gfx->Update((float)dt.dt(), camera->getPos());
-	Space->update(obj[0]->getPos());
+	for (int i = 0; i < 4; i++) {
+		obj[i]->update();
+	}
 
 #pragma region camera_settings
 	if (getkey('C')) {
@@ -313,70 +333,33 @@ void Game::updateShaders(bool vs, bool ps)
 	}
 }
 
-bool Game::processMessage()
-{
-
-
-	return false;
-}
-
 void Game::setUpObject()
 {
 	////////OBJECTS///////////
 	//cameras
-	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(2.f, 2.0f, 2.0f)));//main
-	//obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
+	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 0.f, 10.f), vec3(0.f, 0.f, 0.f), vec3(5.f, 5.0f, 5.0f)));//main
+	obj.push_back(new GameObject(rm->get_Models("Camera.obj", gfx), gfx, vec3(0.f, 100.f, 0.f), vec3(0.f, -1.58f, 0.f), vec3(2.f, 2.0f, 2.0f)));//second
 	////
 	//////OBJECTS
-	//obj.push_back(new GameObject(rm->get_Models("skybox_cube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(100.f, 100.f, 100.f)));
-	//obj.push_back(new GameObject(rm->get_Models("skybox_cube.obj", gfx), gfx, vec3(0.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(100.f, 100.f, 100.f)));
-	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(0.f, 0.f, -50.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	////walls
-	//obj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(0.f, 5.f, 20.f),  vec3(-PI/2, -PI/2, PI), vec3(20.f, 20.f, 20.f)));
-	//obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(100.f, 5.f, 100.f),  vec3(0, 0.f, 0),   vec3(1.f, 1.f, 1.f)));
-	//obj.push_back(new GameObject(rm->get_Models("indoor_plant_02.obj", gfx), gfx, vec3(-100.f, 5.f, -100.f), vec3(0, 0, 0),  vec3(1.f, 1.f, 1.f)));
-	//obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-20.f, 5.f, 0.f), vec3(-PI/2, PI, PI),   vec3(20.f, 20.f, 20.f)));
+	obj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(0, -5, 0), vec3(0, 0, 1.57f), vec3(100, 100, 100)));
+	obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
+
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, vec3(5,0,0), vec3(0.f, 0.f, 0.f), vec3(5,5,5)));
+
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("fbxtest.fbx", gfx), gfx));
+
+	obj.push_back(new GameObject(rm->get_Models("Shield.obj", gfx), gfx, vec3(-1,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("quadYoda.obj", gfx), gfx, vec3(10,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
 	
-	//static
-	/*
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx),        gfx, vec3(25.f, 0.f, 0.f), vec3(0.f, 0.f, -1.57f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx),        gfx, vec3(0.f, 0.f, 25.f), vec3(0.f, 0.f, 1.57f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx),        gfx, vec3(-25.f, 0.f, 0.f), vec3(-1.57f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx),        gfx, vec3(0.f, 0.f, -25.f), vec3(1.57f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(25.f, 0.f, -5.f), vec3(0.f, 0.f, 0.f), vec3(0.3f, 0.3f, 0.3f)));
-	
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx),     gfx, vec3(25.f, 0.f, 5.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-37.5f, 0.f, -37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(37.5f, 0.f, -37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-37.5f, 0.f, 37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(37.5f, 0.f, 37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, 37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-12.5f, 0.f, 37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-12.5f, 0.f, -37.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(37.5f, 0.f, 12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-37.5f, 0.f, 12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(37.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-37.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, 12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-12.5f, 0.f, 12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(12.5f, 0.f, -12.5f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
-	*/
-	
-	//stataicObj.push_back(new GameObject(rm->get_Models("fbxtest.fbx", gfx), gfx, vec3(0,0,0), vec3(0, 0, 0), vec3(1, 1, 1)));
-	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(100,0,100), vec3(0, 0, 0), vec3(1, 1, 1)));
-	//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-112,0,-100), vec3(0, 0, 0), vec3(1, 1, 1)));
+
 	float gw = 10;
 	float gn = 8;
 	for (int x = 0; x < gn; x++) {
 		for (int y = 0; y < gn; y++) {
-			stataicObj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(10, 10, 10)));
+			//stataicObj.push_back(new GameObject(rm->get_Models("quad2.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(10, 10, 10)));
 			//stataicObj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(x*(gw*2) - ((gn)*gw), -4, y*(gw * 2) - ((gn)*gw)), vec3(0, 0, 1.57f), vec3(1, 1, 1)));
 		}
 	}
@@ -390,13 +373,13 @@ void Game::setUpLights()
 
 	//create the lights with 
 	//light[0] = new DirLight(vec3(0, 30, 8), vec3(0.1f, -PI / 2, 1.f), 100, 100);
-	light[0] = new PointLight(vec3(0, 8, 8), 200, vec3(1,0,0));
+	light[0] = new PointLight(vec3(1, 1, 1), 200, vec3(1,1,1));
 	//light[1] = new SpotLight(vec3(18, 46, 45), vec3(-2.4f, -0.5, 1));
 	//light[2] = new SpotLight(vec3(8, 47.f, 0), vec3(0, -1, 1));
 	//light[3] = new SpotLight(vec3(30, 50, 0), vec3(-1, -1, 1));
 
 	//set color for lights (deafault white)
-	light[0]->getColor() = vec3(1, 0, 1);
+	light[0]->getColor() = vec3(1, 1, 1);
 	//light[1]->getColor() = vec3(1, 0, 1);
 
 	//say to graphics/shaders how many lights we have

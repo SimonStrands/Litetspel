@@ -30,11 +30,31 @@ std::string* getDest(std::string destPath, char splitchar)
 	return returnStr;
 }
 
+std::string getPathfrom(std::string fullpath, std::string breakword)
+{
+	size_t found = fullpath.find(breakword);
+	std::string theReturn = fullpath;
+	if (found != std::string::npos) {
+		theReturn = "";
+		for (int i = found; i < fullpath.size(); i++) {
+			theReturn.push_back(fullpath[i]);
+		}
+	}
+	return theReturn;
+}
+
 void swap(std::vector<vertex>& a)
 {
 	vertex temp = a[a.size() - 1];
 	a[a.size() - 1] = a[a.size() - 2];
 	a[a.size() - 2] = temp;
+}
+
+void swap(float& a, float& b)
+{
+	float temp = a;
+	a = b;
+	b = temp;
 }
 
 //only searches in Textures

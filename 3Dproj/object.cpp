@@ -119,6 +119,11 @@ void object::addScale(vec3 scale)
     this->scale = this->scale + scale;
 }
 
+void object::update()
+{
+    this->_lastPosition = this->pos;
+}
+
 ID3D11Buffer*& object::getVertexConstBuffer()
 {
     return this->Vg_pConstantBuffer;

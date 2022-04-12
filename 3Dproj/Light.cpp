@@ -83,12 +83,7 @@ Light::~Light()
 
 vec3& Light::getRotation()
 {
-	SpotLight* SL = dynamic_cast<SpotLight*>(this);
-	if (SL != nullptr) {
-		return SL->getRotation();
-	}
-	std::cout << "error normal light doesn't have a rotation returning position" << std::endl;
-	return this->pos;
+	return this->rot;
 }
 
 vec3& Light::getPos()
