@@ -33,7 +33,6 @@ public:
 	void ForwardDraw();
 	void DrawAllShadowObject();//without any otherShaders
 	void updateShaders(bool vs = true, bool ps = true);
-	bool processMessage();
 private:
 	MSG msg = {};
 	Graphics *gfx;

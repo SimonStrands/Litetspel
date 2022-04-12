@@ -192,7 +192,7 @@ bool getMatrialFromFile(std::string fileName, std::vector<Material*>& matrial, G
 		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
 			aiString Path;
 			if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-				std::string thePath(Path.data);
+				std::string thePath = getPathfrom(Path.data, "Textures");
 				matrial[i]->loadTexture(thePath, gfx, 0, def);
 			}
 		}

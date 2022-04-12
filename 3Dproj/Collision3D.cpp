@@ -105,6 +105,7 @@ void moveObject(GameObject*& objectA, GameObject*& objectB, ColCube colCubeA, Co
 			lowest = dirs[i];
 		}
 	}
+	
 	vec3 dir;
 	switch (index)
 	{
@@ -121,7 +122,12 @@ void moveObject(GameObject*& objectA, GameObject*& objectB, ColCube colCubeA, Co
 		objectA->movePos(vec3(highdir.x, 0, 0));
 		break;
 	case 4:
-		objectA->movePos(vec3(0, highdir.y, 0));
+		//objectA->movePos(vec3(0, highdir.y, 0));
+		//+ (objectA->getPos().y - colCubeA.lowPoint.y)
+		//objectA->setPos(vec3(objectA->getPos().x, colCubeB.highPoint.y , objectA->getPos().z));
+		objectA->setPos(vec3(objectA->getPos().x, 
+			objectB->getPos().y + objectB->getWidthHeightDepth().y/2 + objectA->getWidthHeightDepth().y/2 - 0.6, 
+			objectA->getPos().z));
 		break;
 	case 5:
 		objectA->movePos(vec3(0, 0, highdir.z));
@@ -129,6 +135,7 @@ void moveObject(GameObject*& objectA, GameObject*& objectB, ColCube colCubeA, Co
 	}
 }
 
+static int oua = 0;
 void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB, float dt)
 {
 	DirectX::XMVECTOR a[2];
@@ -140,10 +147,9 @@ void collisionWithBlocking(GameObject*& objectA, GameObject*& objectB, float dt)
 	if (collision3D(colCubeA, colCubeB))
 	{
 		//check later if object can move
-
 		moveObject(objectA, objectB, colCubeA, colCubeB, dt);
-		//moveObject(objectB, objectA, colCubeB, colCubeA);
-		
+		//change so the other object move?
+		//moveObject(objectA, objectB, colCubeA, colCubeB, dt);
 	}
 }
 

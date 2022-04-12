@@ -30,6 +30,10 @@ public:
 
 	//clear that the object has not been drawned before
 	void clearDrawed();
+
+
+	//DEBUG
+	vec3 getWidthHeightDepth();
 protected:
 	ModelObj* model;
 private:
@@ -37,4 +41,6 @@ private:
 	bool drawed;
 	DirectX::XMFLOAT3 BBpos;
 	DirectX::XMFLOAT3 BBsizes;
+	void setHeightWidthDepth();
+	vec3 WHD;
 };

@@ -106,78 +106,77 @@ void Game::run()
 	static bool once = false;
 	while (msg.message != WM_QUIT && gfx->getWindosClass().ProcessMessages())
 	{
-		
-		if (keyboard->isKeyPressed('P')) {
-			gfx->getWindosClass().HideCoursor();
-		}
-		else if (keyboard->isKeyPressed('O')) {
-			gfx->getWindosClass().ShowCoursor();
-		}
-		/*Read Mouse*/
-		while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
-			mouseEvent e = mouse->ReadEvent();
-			if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
-				camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
+		if (dt.dt() < 0.2f) {
+			if (keyboard->isKeyPressed('P')) {
+				gfx->getWindosClass().HideCoursor();
 			}
-			if (e.getType() == mouseEvent::EventType::LPress) {
-				//soundManager.playSound("ah1", obj[2]->getPos());
+			else if (keyboard->isKeyPressed('O')) {
+				gfx->getWindosClass().ShowCoursor();
 			}
+			/*Read Mouse*/
+			while (!mouse->EventBufferEmpty() && mouse->getMouseActive()) {
+				mouseEvent e = mouse->ReadEvent();
+				if (e.getType() == mouseEvent::EventType::RAW_MOVE) {
+					camera->rotateCameraMouse(vec3(e.getPosX(), e.getPosY(), 0), dt.dt());
+				}
+				if (e.getType() == mouseEvent::EventType::LPress) {
+					//soundManager.playSound("ah1", obj[2]->getPos());
+				}
+			}
+			//f (keyboard->isKeyPressed('W')) {
+			//	std::cout << "penis" << std::endl;
+			//	camera->movePos(vec3(0, 0, 100 * dt.dt()));
+			//
+
+			gfx->clearScreen();
+			gfx->setTransparant(false);
+			//for shadow
+			//måste uppdatera detta så inte hela object uppdateras när bara skugga ska
+			shadowMap->setUpdateShadow();
+			vec3 camLP = camera->getPos();
+			vec3 camLR = camera->getRot();
+			for (int i = 0; i < nrOfLight; i++) {
+				//set cam position to lightposition
+				camera->setPosition(light[i]->getPos());
+				camera->setRotation(light[i]->getRotation());
+				shadowMap->inUpdateShadow(i);
+				updateShaders(true, false);
+				DrawAllShadowObject();
+			}
+			//set cam position so its the real cam
+			camera->setPosition(camLP);
+			camera->setRotation(camLR);
+			gfx->setProjection(0);//last can be dir light
+			gfx->RsetViewPort();
+
+			Update();
+			if (def_rend) {
+				//deferred rendering
+				defRend->BindFirstPass();
+				this->DrawToBuffer();
+				defRend->BindSecondPass(shadowMap->GetshadowResV());
+			}
+
+			gfx->setRenderTarget();
+			gfx->setTransparant(true);
+			if (!def_rend) {
+				//if deferred rendfering 
+				gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
+				this->DrawToBuffer();
+			}
+			this->ForwardDraw();
+			gfx->present(this->lightNr);
+
+			//once = false;
 		}
-		//f (keyboard->isKeyPressed('W')) {
-		//	std::cout << "penis" << std::endl;
-		//	camera->movePos(vec3(0, 0, 100 * dt.dt()));
-		//
-		
-		gfx->clearScreen();
-		gfx->setTransparant(false);
-		//for shadow
-		//måste uppdatera detta så inte hela object uppdateras när bara skugga ska
-		shadowMap->setUpdateShadow();
-		vec3 camLP = camera->getPos();
-		vec3 camLR = camera->getRot();
-		for (int i = 0; i < nrOfLight; i++) {
-			//set cam position to lightposition
-			camera->setPosition(light[i]->getPos());
-			camera->setRotation(light[i]->getRotation());
-			shadowMap->inUpdateShadow(i);
-			updateShaders(true, false);
-			DrawAllShadowObject();
-		}
-		//set cam position so its the real cam
-		camera->setPosition(camLP);
-		camera->setRotation(camLR);
-		gfx->setProjection(0);//last can be dir light
-		gfx->RsetViewPort();
-		
-		
-		Update();
-		updateShaders();
-		if (def_rend){
-			//deferred rendering
-			defRend->BindFirstPass();
-			this->DrawToBuffer();
-			defRend->BindSecondPass(shadowMap->GetshadowResV());
-		}
-		
-		gfx->setRenderTarget();
-		gfx->setTransparant(true);
-		if (!def_rend) {
-			//if deferred rendfering 
-			gfx->get_IMctx()->PSSetShaderResources(1, 1, &shadowMap->GetshadowResV());//add ShadowMapping
-			this->DrawToBuffer();
-		}
-		this->ForwardDraw();
-		gfx->present(this->lightNr);
-	
-		//once = false;
+		dt.restartClock();
 	}
 	printf("quit"); 
 }
 
 void Game::Update()
 {
-	dt.restartClock();
-	
+	/*Move things*/
 	camera->updateCamera((float)dt.dt());
 	if (getkey('N')) {
 		DirectX::XMMATRIX viewMatrix = DirectX::XMMATRIX(
@@ -190,8 +189,18 @@ void Game::Update()
 		YRotation(viewMatrix, obj[1]->getRot().y);
 		gfx->getVertexconstbuffer()->view.element = viewMatrix;
 	}
+	obj[3]->movePos(vec3(0, -10 * dt.dt(), 0));
 	obj[0]->setPos(camera->getPos());
 	obj[0]->setRot(vec3(0, camera->getRot().x, -camera->getRot().y)); //+ vec3(0, 1.57f, 0));
+
+	DirectX::XMVECTOR aobb[2];
+	DirectX::XMVECTOR aobb2[2];
+	obj[0]->getBoundingBox(aobb);
+	obj[3]->getBoundingBox(aobb2);
+	obj[5]->setPos(vec3(aobb[0].m128_f32[0], aobb[0].m128_f32[1], aobb[0].m128_f32[2]));
+	obj[6]->setPos(vec3(aobb[1].m128_f32[0], aobb[1].m128_f32[1], aobb[1].m128_f32[2]));
+	obj[7]->setPos(vec3(aobb2[0].m128_f32[0], aobb2[0].m128_f32[1], aobb2[0].m128_f32[2]));
+	obj[8]->setPos(vec3(aobb2[1].m128_f32[0], aobb2[1].m128_f32[1], aobb2[1].m128_f32[2]));
 
 	for (int i = 0; i < billboardGroups.size(); i++) {
 		billboardGroups[i]->update((float)dt.dt(), gfx);
@@ -201,11 +210,17 @@ void Game::Update()
 		LightVisualizers[i]->setRot(vec3(0 , light[i]->getRotation().x, -light[i]->getRotation().y) + vec3(0,1.57f,0));
 	}
 	camera->calcFURVectors();
-	soundManager.update(camera->getPos(), camera->getForwardVec());
-	gfx->Update((float)dt.dt(), camera->getPos());
 	Space->update(camera->getPos());
 
+	/*update vertex*/
+	updateShaders();
 
+	/*Collision checking*/
+	collisionWithBlocking(obj[3], obj[2], dt.dt());
+
+	/*update things*/
+	soundManager.update(camera->getPos(), camera->getForwardVec());
+	gfx->Update((float)dt.dt(), camera->getPos());
 	for (int i = 0; i < 4; i++) {
 		obj[i]->update();
 	}
@@ -318,13 +333,6 @@ void Game::updateShaders(bool vs, bool ps)
 	}
 }
 
-bool Game::processMessage()
-{
-
-
-	return false;
-}
-
 void Game::setUpObject()
 {
 	////////OBJECTS///////////
@@ -337,9 +345,11 @@ void Game::setUpObject()
 	obj.push_back(new GameObject(rm->get_Models("nanosuit.obj", gfx), gfx, vec3(-5.f, 0.f, 0.f), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f)));
 
 	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, vec3(5,0,0), vec3(0.f, 0.f, 0.f), vec3(5,5,5)));
-	//obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
-	//obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
-	//obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("DCube.obj", gfx), gfx, obj[0]->getPos(), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
+	obj.push_back(new GameObject(rm->get_Models("fbxtest.fbx", gfx), gfx));
 
 	obj.push_back(new GameObject(rm->get_Models("Shield.obj", gfx), gfx, vec3(-1,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));
 	obj.push_back(new GameObject(rm->get_Models("quadYoda.obj", gfx), gfx, vec3(10,-1,-1), vec3(0.f, 0.f, 0.f), vec3(0.5f, 0.5f, 0.5f)));

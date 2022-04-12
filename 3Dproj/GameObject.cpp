@@ -9,6 +9,7 @@ GameObject::GameObject(ModelObj*file, Graphics*& gfx, vec3 pos, vec3 rot, vec3 s
 	CreateVertexConstBuffer(gfx, this->getVertexConstBuffer());
 	object::setModel(model);
 	drawed = false;
+	this->setHeightWidthDepth();
 }
 
 GameObject::~GameObject()
@@ -49,6 +50,7 @@ void GameObject::getBoundingBox(DirectX::XMVECTOR theReturn[])
 		{low.x,low.y,high.z,1},
 		{low.x,low.y,low.z,1}
 	};
+	
 	bbPoints[0] = DirectX::XMVector4Transform(bbPoints[0], modelMatrix);
 	theReturn[0] = bbPoints[0];
 	theReturn[1] = bbPoints[0];
@@ -75,13 +77,10 @@ void GameObject::getBoundingBox(DirectX::XMVECTOR theReturn[])
 			theReturn[0].m128_f32[2] = bbPoints[i].m128_f32[2];
 		}
 	}
-
 }
 
 DirectX::BoundingBox GameObject::getDirectXBoundingBoxFromModel()
 {
-	//TODO : delete datemp
-	DirectX::XMVECTOR datemp[2];
 	//rotations
 	DirectX::XMMATRIX rot(DirectX::XMMatrixRotationRollPitchYaw(this->getRot().x, this->getRot().y, this->getRot().z));
 
@@ -125,6 +124,23 @@ const bool GameObject::isDrawed()
 void GameObject::clearDrawed()
 {
 	this->drawed = false;
+}
+
+vec3 GameObject::getWidthHeightDepth()
+{
+	return this->WHD;
+}
+
+void GameObject::setHeightWidthDepth()
+{
+	DirectX::XMVECTOR theReturn[2];
+	//rotations
+	getBoundingBox(theReturn);
+
+	WHD.x = theReturn[1].m128_f32[0] - theReturn[0].m128_f32[0];
+	WHD.y = theReturn[1].m128_f32[1] - theReturn[0].m128_f32[1];
+	WHD.z = theReturn[1].m128_f32[2] - theReturn[0].m128_f32[2];
+
 }
 
 void GameObject::Updateshaders(Graphics*& gfx, bool vertex)
